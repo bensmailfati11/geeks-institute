@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    {% if author %}
+    <!-- Author Header -->
+    <div class="bg-gradient-to-r from-green-400 to-blue-500 rounded-lg text-white p-8 mb-8">
+        <div class="flex items-center space-x-6">
+            <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center">
+                <span class="text-4xl text-green-600">👤</span>
+            </div>
+            <div>
+                <h1 class="text-4xl font-bold mb-2">{{ author.name }}</h1>
+                <p class="text-xl opacity-90">{{ author.country }}</p>
+                <div class="flex space-x-6 mt-2 text-sm">
+                    <span>{{ author.book_count }} books published</span>
+                    <span>•</span>
+                    <span>Author ID: {{ author.id }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Author's Books -->
+    <div class="mb-8">
+        <h2 class="text-2xl font-bold mb-4">Books by {{ author.name }}</h2>
+        
+        {% if books %}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {% for book in books %}
+            <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition">
+                <h3 class="text-xl font-semibold mb-2">{{ book.title }}</h3>
+                <p class="text-gray-600 mb-1">Genre: {{ book.genre }}</p>
+                <p class="text-gray-500 text-sm mb-4">{{ book.description[:100] }}...</p>
+                
+                <a href="{{ url_for('details', book_id=book.id) }}" 
+                   class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
+                   Read More
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-8 bg-yellow-50 rounded-lg">
+            <span class="text-4xl">📚</span>
+            <p class="text-gray-600 mt-2">No books found by this author yet.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Navigation -->
+    <div class="flex space-x-4 justify-center">
+        <a href="{{ url_for('authors') }}" 
+           class="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition">
+           Back to Authors
+        </a>
+        <a href="{{ url_for('home') }}" 
+           class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition">
+           Back to Home
+        </a>
+    </div>
+
+    {% else %}
+    <!-- Author Not Found -->
+    <div class="text-center py-12">
+        <div class="text-6xl mb-4">❌</div>
+        <h2 class="text-2xl font-semibold text-gray-600">Author Not Found</h2>
+        <p class="text-gray-500 mb-4">The author you're looking for doesn't exist.</p>
+        <a href="{{ url_for('authors') }}" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">
+            Browse Authors
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

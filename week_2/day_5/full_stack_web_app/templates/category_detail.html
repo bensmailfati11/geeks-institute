@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    {% if author %}
+    <!-- Author Header -->
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div class="relative h-64">
+            <img src="{{ author.photo }}" 
+                 alt="{{ author.name }} photo" 
+                 class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+            <div class="absolute bottom-0 left-0 p-8 text-white">
+                <h1 class="text-4xl font-bold mb-2">{{ author.name }}</h1>
+                <p class="text-xl">{{ author.country }}</p>
+            </div>
+        </div>
+        
+        <!-- Author Info -->
+        <div class="p-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2">
+                    <h2 class="text-2xl font-semibold mb-4">About the Author</h2>
+                    <p class="text-gray-700 leading-relaxed">{{ author.bio }}</p>
+                    
+                    <div class="mt-6 grid grid-cols-2 gap-4">
+                        <div class="bg-gray-50 p-4 rounded">
+                            <span class="text-2xl font-bold text-green-600">{{ author.book_count }}</span>
+                            <p class="text-gray-600">Books Published</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded">
+                            <span class="text-2xl font-bold text-blue-600">{{ author.country }}</span>
+                            <p class="text-gray-600">Country</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Author Books -->
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Books by {{ author.name }}</h3>
+                    {% if books %}
+                    <div class="space-y-4">
+                        {% for book in books %}
+                        <div class="flex items-center space-x-3 bg-gray-50 p-3 rounded">
+                            <img src="{{ book.cover_image }}" 
+                                 alt="{{ book.title }} cover" 
+                                 class="w-12 h-16 object-cover rounded">
+                            <div>
+                                <p class="font-medium">{{ book.title }}</p>
+                                <p class="text-sm text-gray-600">{{ book.genre }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-gray-600">No books found by this author.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <!-- Author Not Found -->
+    <div class="text-center py-12">
+        <div class="text-6xl mb-4">❌</div>
+        <h2 class="text-2xl font-semibold text-gray-600">Author Not Found</h2>
+        <p class="text-gray-500 mb-4">The author you're looking for doesn't exist.</p>
+        <a href="{{ url_for('authors') }}" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">
+            Browse Authors
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
