@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Section Statistiques -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+    <div class="bg-white rounded-lg shadow-lg p-6 text-center border-t-4 border-library-accent">
+        <div class="text-3xl font-bold text-library-primary">{{ books|length }}</div>
+        <p class="text-gray-600">Livres Total</p>
+    </div>
+    <div class="bg-white rounded-lg shadow-lg p-6 text-center border-t-4 border-green-500">
+        <div class="text-3xl font-bold text-green-600">{{ (books|map(attribute='author')|unique|list)|length }}</div>
+        <p class="text-gray-600">Auteurs Uniques</p>
+    </div>
+    <div class="bg-white rounded-lg shadow-lg p-6 text-center border-t-4 border-blue-500">
+        <div class="text-3xl font-bold text-blue-600">{{ (books|map(attribute='genre')|unique|list)|length }}</div>
+        <p class="text-gray-600">Catégories</p>
+    </div>
+    <div class="bg-white rounded-lg shadow-lg p-6 text-center border-t-4 border-purple-500">
+        <div class="text-3xl font-bold text-purple-600">2024</div>
+        <p class="text-gray-600">Année de Création</p>
+    </div>
+</div>
+
+<!-- Section Recherche -->
+<div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+    <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+        <input type="text" placeholder="Rechercher un livre, auteur ou genre..." 
+               class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-library-primary">
+        <button class="vintage-btn text-white px-6 py-3 rounded-lg font-semibold">
+            🔍 Rechercher
+        </button>
+    </div>
+</div>
+
+<!-- Grille des Livres -->
+<div class="mb-8">
+    <h2 class="text-3xl font-serif font-bold text-library-primary mb-6">📚 Derniers Livres Ajoutés</h2>
+    
+    {% if books %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {% for book in books %}
+        <div class="book-card bg-white rounded-lg shadow-md overflow-hidden">
+            <!-- Image de couverture -->
+            <div class="h-48 overflow-hidden relative">
+                <img src="{{ book.cover_image }}" 
+                     alt="{{ book.title }}" 
+                     class="w-full h-full object-cover">
+                <div class="absolute top-4 right-4 bg-library-accent text-white px-2 py-1 rounded text-sm">
+                    {{ book.genre }}
+                </div>
+            </div>
+            
+            <!-- Informations du livre -->
+            <div class="p-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">{{ book.title }}</h3>
+                <p class="text-library-primary font-medium mb-1">par {{ book.author }}</p>
+                <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{ book.description }}</p>
+                
+                <!-- Actions -->
+                <div class="flex space-x-2">
+                    <a href="{{ url_for('details', book_id=book.id) }}" 
+                       class="flex-1 bg-library-primary text-white text-center py-2 rounded hover:bg-brown-800 transition">
+                       Détails
+                    </a>
+                    <a href="{{ url_for('edit', book_id=book.id) }}" 
+                       class="flex-1 bg-library-accent text-white text-center py-2 rounded hover:bg-yellow-600 transition">
+                       Modifier
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <!-- État vide -->
+    <div class="text-center py-12 bg-white rounded-lg shadow-lg">
+        <div class="text-6xl mb-4">📖</div>
+        <h3 class="text-2xl font-semibold text-gray-600 mb-2">Aucun livre pour le moment</h3>
+        <p class="text-gray-500 mb-6">Commencez par ajouter votre premier livre à la bibliothèque</p>
+        <a href="{{ url_for('create') }}" class="vintage-btn text-white px-6 py-3 rounded-lg text-lg">
+            + Ajouter le Premier Livre
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Section Appel à l'action -->
+<div class="bg-gradient-to-r from-library-primary to-brown-800 rounded-lg text-white p-8 text-center">
+    <h3 class="text-2xl font-serif font-bold mb-2">Rejoignez notre communauté de lecteurs</h3>
+    <p class="mb-4 opacity-90">Partagez vos découvertes littéraires avec d'autres passionnés</p>
+    <div class="space-x-4">
+        <a href="{{ url_for('create') }}" class="vintage-btn text-white px-6 py-3 rounded-lg">
+            Ajouter un Nouveau Livre
+        </a>
+        <a href="{{ url_for('categories') }}" class="bg-white text-library-primary px-6 py-3 rounded-lg font-medium">
+            Explorer les Catégories
+        </a>
+    </div>
+</div>
+{% endblock %}
