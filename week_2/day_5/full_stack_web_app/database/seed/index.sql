@@ -1,76 +1,45 @@
-CREATE TABLE IF NOT EXISTS categories (
+DROP TABLE IF EXISTS livres CASCADE;
+DROP TABLE IF EXISTS details CASCADE;
+DROP TABLE IF EXISTS categories CASCADE;
+DROP TABLE IF EXISTS auteurs CASCADE;
+DROP TABLE IF EXISTS livres_auteurs CASCADE;
+DROP TABLE IF EXISTS membres CASCADE;
+DROP TABLE IF EXISTS emprunts CASCADE;
+
+
+-- Table Authors
+CREATE TABLE authors (
     id SERIAL PRIMARY KEY,
-    nom VARCHAR(100) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    country VARCHAR(100),
+    bio TEXT,
+    photo TEXT
+);
+
+-- Table Categories
+CREATE TABLE categories (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
     description TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    icon TEXT,
+    cover_image TEXT
 );
 
-
-CREATE TABLE IF NOT EXISTS livres (
+-- Table Books
+CREATE TABLE books (
     id SERIAL PRIMARY KEY,
-    titre VARCHAR(255) NOT NULL,
-    isbn VARCHAR(50) UNIQUE,
-    annee_publication INT,
-    nombre_pages INT,
-    langue VARCHAR(50) DEFAULT 'Français',
-    nombre_exemplaires INT DEFAULT 1,
-    exemplaires_disponibles INT DEFAULT 1,
-    category_id INT REFERENCES categories(id) ON DELETE SET NULL,
-    resume TEXT,
-    image_url TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-ALTER TABLE livres
-ADD COLUMN nombre_exemplaires INT DEFAULT 1,
-ADD COLUMN exemplaires_disponibles INT DEFAULT 1;
-
-CREATE TABLE IF NOT EXISTS auteurs (
-    id SERIAL PRIMARY KEY,
-    nom VARCHAR(100) NOT NULL,
-    prenom VARCHAR(100),
-    biographie TEXT,
-    date_naissance DATE,
-    nationalite VARCHAR(50),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS livres_auteurs (
-    id SERIAL PRIMARY KEY,
-    livre_id INT REFERENCES livres(id) ON DELETE CASCADE,
-    auteur_id INT REFERENCES auteurs(id) ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS membres (
-    id SERIAL PRIMARY KEY,
-    nom VARCHAR(100) NOT NULL,
-    prenom VARCHAR(100),
-    email VARCHAR(150) UNIQUE,
-    telephone VARCHAR(50),
-    adresse TEXT,
-    date_inscription TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    actif BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS emprunts (
-    id SERIAL PRIMARY KEY,
-    livre_id INT REFERENCES livres(id) ON DELETE CASCADE,
-    membre_id INT REFERENCES membres(id) ON DELETE CASCADE,
-    date_emprunt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    date_retour_prevue DATE,
-    date_retour_effective DATE,
-    statut VARCHAR(50) DEFAULT 'En cours',
-    amendes NUMERIC(10,2) DEFAULT 0.00,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS details (
-    id SERIAL PRIMARY KEY,
-    livre_id INT REFERENCES livres(id) ON DELETE CASCADE,
-    category_id INT REFERENCES categories(id) ON DELETE SET NULL,
-    isbn VARCHAR(50),
+    title VARCHAR(255) NOT NULL,
+    author_id INTEGER REFERENCES authors(id) ON DELETE SET NULL,
+    genre VARCHAR(100),
     description TEXT,
-    image_url TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    isbn VARCHAR(20),
+    cover_image TEXT,
+    category_id INTEGER REFERENCES categories(id) ON DELETE SET NULL
+);
+
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,  -- plus tard, hacher le mot de passe
+    role VARCHAR(20) DEFAULT 'user'
 );

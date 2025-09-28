@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-6xl mx-auto mt-12">
+    <h1 class="text-4xl font-bold mb-6">Dashboard Admin</h1>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-white p-6 rounded shadow text-center">
+            <h2 class="text-xl font-semibold">Livres</h2>
+            <p class="text-3xl font-bold text-green-600">{{ total_books }}</p>
+        </div>
+        <div class="bg-white p-6 rounded shadow text-center">
+            <h2 class="text-xl font-semibold">Auteurs</h2>
+            <p class="text-3xl font-bold text-blue-600">{{ total_authors }}</p>
+        </div>
+        <div class="bg-white p-6 rounded shadow text-center">
+            <h2 class="text-xl font-semibold">Catégories</h2>
+            <p class="text-3xl font-bold text-purple-600">{{ total_categories }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

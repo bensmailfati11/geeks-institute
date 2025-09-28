@@ -1,115 +1,321 @@
+# app.py
 from flask import Flask, render_template, request, redirect, url_for
+import psycopg2
+from psycopg2.extras import RealDictCursor
 
 app = Flask(__name__)
 
-# Données complètes en français
-sample_books = [
-    {
-        'id': 1, 'title': 'Le Petit Prince', 'author': 'Antoine de Saint-Exupéry', 'genre': 'Roman',
-        'description': 'Conte poétique et philosophique sous l\'apparence d\'un conte pour enfants.',
-        'cover_image': 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=300&h=400&fit=crop',
-        'isbn': '978-2010000001'
-    },
-    {
-        'id': 2, 'title': 'Vingt Mille Lieues sous les mers', 'author': 'Jules Verne', 'genre': 'Science-Fiction',
-        'description': 'Roman d\'aventures et de science-fiction publié en 1870.',
-        'cover_image': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=400&fit=crop',
-        'isbn': '978-2010000002'
-    },
-    {
-        'id': 3, 'title': 'Les Misérables', 'author': 'Victor Hugo', 'genre': 'Roman',
-        'description': 'Roman social et historique publié en 1862.',
-        'cover_image': 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=300&h=400&fit=crop',
-        'isbn': '978-2010000003'
-    },
-    {
-        'id': 4, 'title': 'L\'Étranger', 'author': 'Albert Camus', 'genre': 'Roman',
-        'description': 'Roman philosophique publié en 1942.',
-        'cover_image': 'https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=300&h=400&fit=crop',
-        'isbn': '978-2010000004'
-    }
-]
+# --- CONFIG DB ---
+DB_CONFIG = {
+    "host": "localhost",
+    "database": "librarydb",
+    "user": "postgres",
+    "password": "root",
+    "port": 5433
+}
 
-sample_categories = [
-    {
-        'id': 1, 'name': 'Roman', 'book_count': 12, 'description': 'Œuvres narratives en prose',
-        'icon': '📖', 'cover_image': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=200&fit=crop'
-    },
-    {
-        'id': 2, 'name': 'Science-Fiction', 'book_count': 8, 'description': 'Fiction basée sur des découvertes scientifiques',
-        'icon': '🚀', 'cover_image': 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=400&h=200&fit=crop'
-    },
-    {
-        'id': 3, 'name': 'Fantastique', 'book_count': 6, 'description': 'Univers imaginaires et surnaturels',
-        'icon': '🐉', 'cover_image': 'https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?w=400&h=200&fit=crop'
-    },
-    {
-        'id': 4, 'name': 'Policier', 'book_count': 9, 'description': 'Enquêtes et mystères à résoudre',
-        'icon': '🕵️', 'cover_image': 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=400&h=200&fit=crop'
-    }
-]
+# Fonction pour se connecter à PostgreSQL
+def get_db_connection():
+    conn = psycopg2.connect(**DB_CONFIG, cursor_factory=RealDictCursor)
+    return conn
 
-sample_authors = [
-    {
-        'id': 1, 'name': 'Antoine de Saint-Exupéry', 'book_count': 5, 'country': 'France',
-        'photo': 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&crop=face',
-        'bio': 'Écrivain, poète, aviateur et reporter français, auteur du Petit Prince.'
-    },
-    {
-        'id': 2, 'name': 'Jules Verne', 'book_count': 15, 'country': 'France',
-        'photo': 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&h=200&fit=crop&crop=face',
-        'bio': 'Écrivain français dont l\'œuvre est riche de science-fiction et d\'aventures.'
-    },
-    {
-        'id': 3, 'name': 'Victor Hugo', 'book_count': 12, 'country': 'France',
-        'photo': 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=200&h=200&fit=crop&crop=face',
-        'bio': 'Poète, dramaturge et prosateur romantique considéré comme l\'un des plus importants écrivains de langue française.'
-    },
-    {
-        'id': 4, 'name': 'Albert Camus', 'book_count': 7, 'country': 'France',
-        'photo': 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face',
-        'bio': 'Écrivain, philosophe, romancier, dramaturge, essayiste et nouvelliste français.'
-    }
-]
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get("user_id"):  # Vérifie si connecté
+            flash("Veuillez vous connecter d'abord.", "warning")
+            return redirect(url_for("login"))
+        if not session.get("is_admin"):  # Vérifie si admin
+            flash("Accès refusé : administrateur uniquement.", "danger")
+            return redirect(url_for("index"))
+        return f(*args, **kwargs)
+    return decorated_function
 
-# Routes complètes
+# --- ROUTE HOME / INDEX ---
 @app.route("/")
-def home():
-    return render_template("index.html", books=sample_books)
+def index():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM books ORDER BY id DESC")
+    books = cur.fetchall()
+    cur.close()
+    conn.close()
+    return render_template("index.html", books=books)
 
-@app.route("/create")
-def create():
-    return render_template("create.html")
-
-@app.route("/details/<int:book_id>")
-def details(book_id):
-    book = next((b for b in sample_books if b['id'] == book_id), None)
-    return render_template("details.html", book=book)
-
-@app.route("/edit/<int:book_id>")
-def edit(book_id):
-    book = next((b for b in sample_books if b['id'] == book_id), None)
-    return render_template("edit.html", book=book)
-
-@app.route("/categories")
-def categories():
-    return render_template("categories.html", categories=sample_categories)
-
-@app.route("/category/<int:category_id>")
-def category_detail(category_id):
-    category = next((c for c in sample_categories if c['id'] == category_id), None)
-    category_books = [b for b in sample_books if b['genre'] == category['name']] if category else []
-    return render_template("category_detail.html", category=category, books=category_books)
-
+# --- ROUTE AUTEURS ---
 @app.route("/authors")
 def authors():
-    return render_template("authors.html", authors=sample_authors)
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT a.*, COUNT(b.id) as book_count
+        FROM authors a
+        LEFT JOIN books b ON a.id = b.author_id
+        GROUP BY a.id
+        ORDER BY a.name
+    """)
+    authors = cur.fetchall()
+    cur.close()
+    conn.close()
+    return render_template("authors.html", authors=authors)
 
+# --- ROUTE CREATE AUTHOR ---
+@app.route("/authors/create", methods=["GET", "POST"])
+def create_author():
+    if request.method == "POST":
+        name = request.form["name"]
+        country = request.form.get("country", "")
+        bio = request.form.get("bio", "")
+        photo = request.form.get("photo", "")
+
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute(
+            "INSERT INTO authors (name, country, bio, photo) VALUES (%s, %s, %s, %s)",
+            (name, country, bio, photo)
+        )
+        conn.commit()
+        cur.close()
+        conn.close()
+        return redirect(url_for("authors"))
+
+    return render_template("create_author.html")
+
+# --- ROUTE DETAIL AUTEUR ---
 @app.route("/author/<int:author_id>")
 def author_detail(author_id):
-    author = next((a for a in sample_authors if a['id'] == author_id), None)
-    author_books = [b for b in sample_books if b['author'] == author['name']] if author else []
-    return render_template("author_detail.html", author=author, books=author_books)
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM authors WHERE id = %s", (author_id,))
+    author = cur.fetchone()
+    cur.execute("SELECT * FROM books WHERE author_id = %s", (author_id,))
+    books = cur.fetchall()
+    cur.close()
+    conn.close()
+    return render_template("author_detail.html", author=author, books=books)
 
+#search
+@app.route("/search")
+def search():
+    query = request.args.get("q", "")
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    # Recherche sur le titre du livre, nom de l'auteur et catégorie
+    cur.execute("""
+        SELECT b.*, a.name AS author_name, c.name AS category_name
+        FROM books b
+        LEFT JOIN authors a ON b.author_id = a.id
+        LEFT JOIN categories c ON b.category_id = c.id
+        WHERE b.title ILIKE %s OR a.name ILIKE %s OR c.name ILIKE %s
+        ORDER BY b.id DESC
+    """, (f"%{query}%", f"%{query}%", f"%{query}%"))
+
+    books = cur.fetchall()
+    cur.close()
+    conn.close()
+
+    return render_template("search_results.html", books=books, query=query)
+
+
+# --- ROUTE CATEGORIES ---
+@app.route("/categories")
+def categories():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT c.*, COUNT(b.id) as book_count
+        FROM categories c
+        LEFT JOIN books b ON c.id = b.category_id
+        GROUP BY c.id
+        ORDER BY c.name
+    """)
+    categories = cur.fetchall()
+    cur.close()
+    conn.close()
+    return render_template("categories.html", categories=categories)
+
+# --- ROUTE CREATE CATEGORY ---
+@app.route("/categories/create", methods=["GET", "POST"])
+def create_category():
+    if request.method == "POST":
+        name = request.form["name"]
+        description = request.form.get("description", "")
+        icon = request.form.get("icon", "")
+        cover_image = request.form.get("cover_image", "")
+
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute(
+            "INSERT INTO categories (name, description, icon, cover_image) VALUES (%s, %s, %s, %s)",
+            (name, description, icon, cover_image)
+        )
+        conn.commit()
+        cur.close()
+        conn.close()
+        return redirect(url_for("categories"))
+
+    return render_template("create_category.html")
+
+# --- ROUTE DETAIL CATEGORIE ---
+@app.route("/category/<int:category_id>")
+def category_detail(category_id):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM categories WHERE id = %s", (category_id,))
+    category = cur.fetchone()
+    cur.execute("SELECT * FROM books WHERE category_id = %s", (category_id,))
+    books = cur.fetchall()
+    cur.close()
+    conn.close()
+    return render_template("category_detail.html", category=category, books=books)
+
+# --- ROUTE DETAILS LIVRE ---
+@app.route("/book/<int:book_id>")
+def details(book_id):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM books WHERE id = %s", (book_id,))
+    book = cur.fetchone()
+    cur.close()
+    conn.close()
+    return render_template("details.html", book=book)
+
+# --- ROUTE CREATE LIVRE ---
+@app.route("/create", methods=["GET", "POST"])
+def create():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT id, name FROM authors")
+    authors = cur.fetchall()
+    cur.execute("SELECT id, name FROM categories")
+    categories = cur.fetchall()
+
+    if request.method == "POST":
+        title = request.form["title"]
+        author_id = request.form["author_id"]
+        category_id = request.form["category_id"]
+        genre = request.form.get("genre", "")
+        description = request.form.get("description", "")
+        cover_image = request.form.get("cover_image", "")
+
+        cur.execute(
+            "INSERT INTO books (title, author_id, category_id, genre, description, cover_image) VALUES (%s, %s, %s, %s, %s, %s)",
+            (title, author_id, category_id, genre, description, cover_image)
+        )
+        conn.commit()
+        cur.close()
+        conn.close()
+        return redirect(url_for("index"))
+
+    cur.close()
+    conn.close()
+    return render_template("create.html", authors=authors, categories=categories)
+
+# --- ROUTE EDIT LIVRE ---
+@app.route("/edit/<int:book_id>", methods=["GET", "POST"])
+def edit(book_id):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM books WHERE id = %s", (book_id,))
+    book = cur.fetchone()
+    cur.execute("SELECT id, name FROM authors")
+    authors = cur.fetchall()
+    cur.execute("SELECT id, name FROM categories")
+    categories = cur.fetchall()
+
+    if request.method == "POST":
+        title = request.form["title"]
+        author_id = request.form["author_id"]
+        category_id = request.form["category_id"]
+        genre = request.form.get("genre", "")
+        description = request.form.get("description", "")
+        cover_image = request.form.get("cover_image", "")
+
+        cur.execute(
+            """UPDATE books
+               SET title=%s, author_id=%s, category_id=%s, genre=%s, description=%s, cover_image=%s
+               WHERE id=%s""",
+            (title, author_id, category_id, genre, description, cover_image, book_id)
+        )
+        conn.commit()
+        cur.close()
+        conn.close()
+        return redirect(url_for("details", book_id=book_id))
+
+    cur.close()
+    conn.close()
+    return render_template("edit.html", book=book, authors=authors, categories=categories)
+
+# --- ROUTE DELETE LIVRE ---
+@app.route("/delete/<int:book_id>", methods=["POST"])
+def delete(book_id):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("DELETE FROM books WHERE id=%s", (book_id,))
+    conn.commit()
+    cur.close()
+    conn.close()
+    return redirect(url_for("index"))
+
+
+# --- ROUTE LOGIN ---
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM users WHERE username = %s", (username,))
+        user = cur.fetchone()
+        cur.close()
+        conn.close()
+
+        if user and check_password_hash(user["password"], password):
+            session["user_id"] = user["id"]
+            session["username"] = user["username"]
+            session["is_admin"] = user["is_admin"]
+            return redirect(url_for("dashboard"))
+        else:
+            return render_template("login.html", error="Nom d'utilisateur ou mot de passe incorrect")
+
+    return render_template("login.html")
+
+# --- ROUTE LOGOUT ---
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("login"))
+
+#dashboard
+@app.route("/dashboard")
+def dashboard():
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    cur.execute("SELECT COUNT(*) AS total_books FROM books")
+    total_books = cur.fetchone()["total_books"]
+
+    cur.execute("SELECT COUNT(*) AS total_authors FROM authors")
+    total_authors = cur.fetchone()["total_authors"]
+
+    cur.execute("SELECT COUNT(*) AS total_categories FROM categories")
+    total_categories = cur.fetchone()["total_categories"]
+
+    cur.close()
+    conn.close()
+
+    return render_template(
+        "dashboard.html",
+        total_books=total_books,
+        total_authors=total_authors,
+        total_categories=total_categories
+    )
+
+
+
+# --- LANCER L'APPLICATION ---
 if __name__ == "__main__":
     app.run(debug=True)

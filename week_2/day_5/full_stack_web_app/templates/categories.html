@@ -1,3 +1,4 @@
+<!-- categories.html -->
 {% extends "base.html" %}
 
 {% block content %}
@@ -5,6 +6,19 @@
 <div class="text-center mb-12">
     <h1 class="text-4xl font-bold text-gray-800 mb-4">Book Categories</h1>
     <p class="text-lg text-gray-600">Explore books by different genres and categories</p>
+</div>
+
+<!-- Formulaire Ajouter Catégorie -->
+<div class="mb-8">
+    <form action="{{ url_for('categories') }}" method="POST" class="flex gap-2 items-center">
+        <input type="text" name="name" placeholder="Category Name" required
+               class="border rounded px-3 py-2 flex-1">
+        <input type="text" name="description" placeholder="Description"
+               class="border rounded px-3 py-2 flex-1">
+        <input type="text" name="icon" placeholder="Icon" class="border rounded px-3 py-2 flex-1">
+        <input type="text" name="cover_image" placeholder="Cover Image URL" class="border rounded px-3 py-2 flex-1">
+        <button type="submit" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 transition">Add</button>
+    </form>
 </div>
 
 <!-- Categories Grid -->
