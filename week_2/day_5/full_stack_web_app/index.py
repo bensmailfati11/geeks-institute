@@ -1,4 +1,4 @@
-# app.py
+# index.py
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 import psycopg2
 from psycopg2.extras import RealDictCursor
@@ -173,6 +173,23 @@ def category_detail(category_id):
     cur.close()
     conn.close()
     return render_template("category_detail.html", category=category, books=books)
+
+# --------- route delete author --------#
+
+@app.route('/author/delete/<int:author_id>', methods=['POST'])
+def delete_author(author_id):
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("DELETE FROM authors WHERE id = %s", (author_id,))
+        conn.commit()
+        cur.close()
+        conn.close()
+        flash('Auteur supprimé avec succès !', 'success')
+    except Exception as e:
+        flash(f"Erreur lors de la suppression : {e}", 'danger')
+    return redirect(url_for('authors'))
+
 
 # --- ROUTES LIVRES CRUD ---
 @app.route("/book/<int:book_id>")
