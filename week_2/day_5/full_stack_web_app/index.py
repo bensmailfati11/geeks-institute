@@ -1,10 +1,16 @@
-# app.py
-from flask import Flask, render_template, request, redirect, url_for
+# index.py
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 import psycopg2
 from psycopg2.extras import RealDictCursor
+from werkzeug.security import check_password_hash
+from functools import wraps
 
 app = Flask(__name__)
+<<<<<<< HEAD
 app.secret_key = 'votre_cle_secrete_tres_securisee'
+=======
+app.secret_key = "secret123"  # nécessaire pour flash() et session
+>>>>>>> 3fd155cb0ffc30ba0e27ed460b56a527cf604c5c
 
 # --- CONFIG DB ---
 
@@ -21,13 +27,14 @@ def get_db_connection():
     conn = psycopg2.connect(**DB_CONFIG, cursor_factory=RealDictCursor)
     return conn
 
+# Décorateur admin
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if not session.get("user_id"):  # Vérifie si connecté
+        if not session.get("user_id"):
             flash("Veuillez vous connecter d'abord.", "warning")
             return redirect(url_for("login"))
-        if not session.get("is_admin"):  # Vérifie si admin
+        if not session.get("is_admin"):
             flash("Accès refusé : administrateur uniquement.", "danger")
             return redirect(url_for("index"))
         return f(*args, **kwargs)
@@ -61,7 +68,7 @@ def authors():
     conn.close()
     return render_template("authors.html", authors=authors)
 
-# --- ROUTE CREATE AUTHOR ---
+# --- CREATE AUTHOR ---
 @app.route("/authors/create", methods=["GET", "POST"])
 def create_author():
     if request.method == "POST":
@@ -80,10 +87,9 @@ def create_author():
         cur.close()
         conn.close()
         return redirect(url_for("authors"))
-
     return render_template("create_author.html")
 
-# --- ROUTE DETAIL AUTEUR ---
+# --- DETAIL AUTEUR ---
 @app.route("/author/<int:author_id>")
 def author_detail(author_id):
     conn = get_db_connection()
@@ -96,14 +102,12 @@ def author_detail(author_id):
     conn.close()
     return render_template("author_detail.html", author=author, books=books)
 
-#search
+# --- ROUTE SEARCH ---
 @app.route("/search")
 def search():
     query = request.args.get("q", "")
     conn = get_db_connection()
     cur = conn.cursor()
-
-    # Recherche sur le titre du livre, nom de l'auteur et catégorie
     cur.execute("""
         SELECT b.*, a.name AS author_name, c.name AS category_name
         FROM books b
@@ -112,55 +116,58 @@ def search():
         WHERE b.title ILIKE %s OR a.name ILIKE %s OR c.name ILIKE %s
         ORDER BY b.id DESC
     """, (f"%{query}%", f"%{query}%", f"%{query}%"))
-
     books = cur.fetchall()
     cur.close()
     conn.close()
-
     return render_template("search_results.html", books=books, query=query)
 
-
-# --- ROUTE CATEGORIES ---
-@app.route("/categories")
+# --- ROUTE CATEGORIES (LISTE + AJOUT) ---
+@app.route("/categories", methods=["GET", "POST"])
 def categories():
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("""
-        SELECT c.*, COUNT(b.id) as book_count
-        FROM categories c
-        LEFT JOIN books b ON c.id = b.category_id
-        GROUP BY c.id
-        ORDER BY c.name
-    """)
-    categories = cur.fetchall()
-    cur.close()
-    conn.close()
-    return render_template("categories.html", categories=categories)
 
-# --- ROUTE CREATE CATEGORY ---
-@app.route("/categories/create", methods=["GET", "POST"])
-def create_category():
     if request.method == "POST":
         name = request.form["name"]
         description = request.form.get("description", "")
         icon = request.form.get("icon", "")
         cover_image = request.form.get("cover_image", "")
 
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute(
-            "INSERT INTO categories (name, description, icon, cover_image) VALUES (%s, %s, %s, %s)",
-            (name, description, icon, cover_image)
-        )
+        cur.execute("""
+            INSERT INTO categories (name, description, icon, cover_image)
+            VALUES (%s, %s, %s, %s)
+        """, (name, description, icon, cover_image))
         conn.commit()
-        cur.close()
-        conn.close()
+        flash("Category added successfully!", "success")
         return redirect(url_for("categories"))
 
-    return render_template("create_category.html")
+    cur.execute("""
+        SELECT c.id, c.name, c.description, c.icon, c.cover_image,
+               COUNT(b.id) AS book_count
+        FROM categories c
+        LEFT JOIN books b ON b.category_id = c.id
+        GROUP BY c.id
+        ORDER BY c.id DESC
+    """)
+    categories = cur.fetchall()
+    cur.close()
+    conn.close()
+    return render_template("categories.html", categories=categories)
 
-# --- ROUTE DETAIL CATEGORIE ---
-@app.route("/category/<int:category_id>")
+# --- DELETE CATEGORY ---
+@app.route("/categories/delete/<int:category_id>", methods=["POST"])
+def delete_category(category_id):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("DELETE FROM categories WHERE id = %s", (category_id,))
+    conn.commit()
+    cur.close()
+    conn.close()
+    flash("Category deleted successfully!", "success")
+    return redirect(url_for("categories"))
+
+# --- DETAIL CATEGORY ---
+@app.route("/categories/<int:category_id>")
 def category_detail(category_id):
     conn = get_db_connection()
     cur = conn.cursor()
@@ -172,7 +179,24 @@ def category_detail(category_id):
     conn.close()
     return render_template("category_detail.html", category=category, books=books)
 
-# --- ROUTE DETAILS LIVRE ---
+# --------- route delete author --------#
+
+@app.route('/author/delete/<int:author_id>', methods=['POST'])
+def delete_author(author_id):
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("DELETE FROM authors WHERE id = %s", (author_id,))
+        conn.commit()
+        cur.close()
+        conn.close()
+        flash('Auteur supprimé avec succès !', 'success')
+    except Exception as e:
+        flash(f"Erreur lors de la suppression : {e}", 'danger')
+    return redirect(url_for('authors'))
+
+
+# --- ROUTES LIVRES CRUD ---
 @app.route("/book/<int:book_id>")
 def details(book_id):
     conn = get_db_connection()
@@ -183,7 +207,6 @@ def details(book_id):
     conn.close()
     return render_template("details.html", book=book)
 
-# --- ROUTE CREATE LIVRE ---
 @app.route("/create", methods=["GET", "POST"])
 def create():
     conn = get_db_connection()
@@ -214,7 +237,6 @@ def create():
     conn.close()
     return render_template("create.html", authors=authors, categories=categories)
 
-# --- ROUTE EDIT LIVRE ---
 @app.route("/edit/<int:book_id>", methods=["GET", "POST"])
 def edit(book_id):
     conn = get_db_connection()
@@ -249,7 +271,6 @@ def edit(book_id):
     conn.close()
     return render_template("edit.html", book=book, authors=authors, categories=categories)
 
-# --- ROUTE DELETE LIVRE ---
 @app.route("/delete/<int:book_id>", methods=["POST"])
 def delete(book_id):
     conn = get_db_connection()
@@ -260,8 +281,7 @@ def delete(book_id):
     conn.close()
     return redirect(url_for("index"))
 
-
-# --- ROUTE LOGIN ---
+# --- LOGIN / LOGOUT ---
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -282,41 +302,32 @@ def login():
             return redirect(url_for("dashboard"))
         else:
             return render_template("login.html", error="Nom d'utilisateur ou mot de passe incorrect")
-
     return render_template("login.html")
 
-# --- ROUTE LOGOUT ---
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for("login"))
 
-#dashboard
+# --- DASHBOARD ---
 @app.route("/dashboard")
 def dashboard():
     conn = get_db_connection()
     cur = conn.cursor()
-
     cur.execute("SELECT COUNT(*) AS total_books FROM books")
     total_books = cur.fetchone()["total_books"]
-
     cur.execute("SELECT COUNT(*) AS total_authors FROM authors")
     total_authors = cur.fetchone()["total_authors"]
-
     cur.execute("SELECT COUNT(*) AS total_categories FROM categories")
     total_categories = cur.fetchone()["total_categories"]
-
     cur.close()
     conn.close()
-
     return render_template(
         "dashboard.html",
         total_books=total_books,
         total_authors=total_authors,
         total_categories=total_categories
     )
-
-
 
 # --- LANCER L'APPLICATION ---
 if __name__ == "__main__":
