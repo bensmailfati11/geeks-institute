@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+
+    <!-- Section Statistiques / Appel à l'action -->
+    <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-library-primary mb-4">📚 Derniers Livres</h1>
+        <p class="text-lg text-gray-600">Gérez votre collection de livres facilement</p>
+    </div>
+
+    {% if books %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {% for book in books %}
+        <div class="book-card bg-white rounded-lg shadow-md overflow-hidden">
+            <!-- Image de couverture -->
+            <div class="h-48 overflow-hidden relative">
+                <img src="{{ book.cover_image }}" 
+                     alt="{{ book.title }}" 
+                     class="w-full h-full object-cover">
+                <div class="absolute top-4 right-4 bg-library-accent text-white px-2 py-1 rounded text-sm">
+                    {{ book.genre }}
+                </div>
+            </div>
+
+            <!-- Informations du livre -->
+            <div class="p-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-1">{{ book.title }}</h3>
+                <p class="text-library-primary font-medium mb-1">par {{ book.author_name }}</p>
+                <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{ book.description }}</p>
+
+                <!-- Actions -->
+                <div class="flex space-x-2">
+                    <a href="{{ url_for('details', book_id=book.id) }}" 
+                       class="flex-1 bg-library-primary text-white text-center py-2 rounded hover:bg-brown-800 transition">
+                       Détails
+                    </a>
+                    <a href="{{ url_for('edit', book_id=book.id) }}" 
+                       class="flex-1 bg-library-accent text-white text-center py-2 rounded hover:bg-yellow-600 transition">
+                       Éditer
+                    </a>
+                    <form action="{{ url_for('delete', book_id=book.id) }}" method="POST" class="flex-1">
+                        <button type="submit" 
+                                class="w-full bg-red-500 text-white py-2 rounded hover:bg-red-600 transition">
+                            Supprimer
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <!-- Aucun livre trouvé -->
+    <div class="text-center py-12 bg-white rounded-lg shadow-lg">
+        <div class="text-6xl mb-4">📖</div>
+        <h3 class="text-2xl font-semibold text-gray-600 mb-2">Aucun livre pour le moment</h3>
+        <p class="text-gray-500 mb-6">Commencez par ajouter votre premier livre à la bibliothèque</p>
+        <a href="{{ url_for('create') }}" class="vintage-btn text-white px-6 py-3 rounded-lg text-lg">
+            + Ajouter le Premier Livre
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

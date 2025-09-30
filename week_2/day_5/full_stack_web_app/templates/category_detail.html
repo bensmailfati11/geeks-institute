@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    {% if category %}
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
+        <div class="relative h-64">
+            <img src="{{ category.cover_image }}" alt="{{ category.name }}" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-library-primary bg-opacity-40"></div>
+            <div class="absolute bottom-0 left-0 p-8 text-white">
+                <h1 class="text-4xl font-serif font-bold">{{ category.name }}</h1>
+                <p class="text-xl">{{ category.book_count }} livres</p>
+            </div>
+        </div>
+        <div class="p-8">
+            <p class="text-gray-700 leading-relaxed">{{ category.description }}</p>
+        </div>
+    </div>
+
+    <div class="mb-8">
+        <h2 class="text-3xl font-serif font-bold text-library-primary mb-6">Livres de {{ category.name }}</h2>
+        {% if books %}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {% for book in books %}
+            <div class="book-card bg-white rounded-lg shadow-md p-6">
+                <div class="flex space-x-4">
+                    <img src="{{ book.cover_image }}" alt="{{ book.title }}" class="w-16 h-24 object-cover rounded">
+                    <div class="flex-1">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">{{ book.title }}</h3>
+                        <p class="text-library-primary text-sm mb-1">{{ book.genre }}</p>
+                        <p class="text-gray-500 text-xs mb-3 line-clamp-2">{{ book.description }}</p>
+                        <a href="{{ url_for('details', book_id=book.id) }}" class="inline-block bg-library-primary text-white px-4 py-1 rounded text-sm hover:bg-brown-800">
+                           Lire plus
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-12 bg-yellow-50 rounded-lg">
+            <span class="text-4xl">📖</span>
+            <p class="text-gray-600 mt-2">Aucun livre trouvé pour cette catégorie.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="flex space-x-4 justify-center">
+        <a href="{{ url_for('categories') }}" class="vintage-btn text-white px-6 py-3 rounded-lg">↩️ Retour aux Catégories</a>
+        <a href="{{ url_for('index') }}" class="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition">🏠 Accueil</a>
+    </div>
+
+    {% else %}
+    <div class="text-center py-12">
+        <div class="text-6xl mb-4">❌</div>
+        <h2 class="text-2xl font-semibold text-gray-600">Catégorie Non Trouvée</h2>
+        <p class="text-gray-500 mb-4">La catégorie que vous recherchez n’existe pas.</p>
+        <a href="{{ url_for('categories') }}" class="vintage-btn text-white px-6 py-3 rounded-lg">✍️ Parcourir les Catégories</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

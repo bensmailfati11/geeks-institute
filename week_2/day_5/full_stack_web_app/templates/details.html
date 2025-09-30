@@ -1,0 +1,88 @@
+<!-- details.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    {% if book %}
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <!-- Header with Book Cover -->
+        <div class="relative">
+            <img src="{{ book.cover_image }}" 
+                 alt="{{ book.title }} cover" 
+                 class="w-full h-64 object-cover">
+            <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+            <div class="absolute bottom-0 left-0 p-8 text-white">
+                <h1 class="text-4xl font-bold mb-2">{{ book.title }}</h1>
+                <p class="text-xl">by {{ book.author }}</p>
+            </div>
+        </div>
+        
+        <!-- Content -->
+        <div class="p-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Book Info -->
+                <div class="lg:col-span-2">
+                    <h2 class="text-2xl font-semibold mb-4">Book Information</h2>
+                    
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="font-medium text-gray-700">Title:</label>
+                                <p class="text-gray-900">{{ book.title }}</p>
+                            </div>
+                            <div>
+                                <label class="font-medium text-gray-700">Author:</label>
+                                <p class="text-gray-900">{{ book.author }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="font-medium text-gray-700">Genre:</label>
+                                <p class="text-gray-900">{{ book.genre }}</p>
+                            </div>
+                            <div>
+                                <label class="font-medium text-gray-700">ISBN:</label>
+                                <p class="text-gray-900">{{ book.isbn }}</p>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="font-medium text-gray-700">Description:</label>
+                            <p class="text-gray-900 mt-2 leading-relaxed">{{ book.description }}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Book Cover Sidebar -->
+                <div class="text-center">
+                    <img src="{{ book.cover_image }}" 
+                         alt="{{ book.title }} cover" 
+                         class="w-48 h-64 object-cover rounded-lg shadow-md mx-auto mb-4">
+                    <div class="space-y-3">
+                        <a href="{{ url_for('edit', book_id=book.id) }}" 
+                           class="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition block">
+                           Edit Book
+                        </a>
+                        <a href="{{ url_for('index') }}" 
+                           class="w-full bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600 transition block">
+                           Back to Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <!-- Book Not Found -->
+    <div class="text-center py-12">
+        <div class="text-6xl mb-4">❌</div>
+        <h2 class="text-2xl font-semibold text-gray-600">Book Not Found</h2>
+        <p class="text-gray-500 mb-4">The book you're looking for doesn't exist.</p>
+        <a href="{{ url_for('home') }}" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">
+            Return to Home
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

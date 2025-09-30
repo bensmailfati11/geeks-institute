@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-md">
+    <h1 class="text-3xl font-bold text-library-primary mb-6">Ajouter un Livre</h1>
+    <form method="POST">
+        <div class="mb-4">
+            <label class="block font-semibold mb-2">Titre</label>
+            <input type="text" name="title" class="w-full border rounded px-3 py-2" required>
+        </div>
+        <div class="mb-4">
+            <label class="block font-semibold mb-2">Auteur</label>
+            <select name="author_id" class="w-full border rounded px-3 py-2">
+                {% for author in authors %}
+                <option value="{{ author.id }}">{{ author.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-4">
+            <label class="block font-semibold mb-2">Catégorie</label>
+            <select name="category_id" class="w-full border rounded px-3 py-2">
+                {% for category in categories %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-4">
+            <label class="block font-semibold mb-2">Genre</label>
+            <input type="text" name="genre" class="w-full border rounded px-3 py-2">
+        </div>
+        <div class="mb-4">
+            <label class="block font-semibold mb-2">Description</label>
+            <textarea name="description" class="w-full border rounded px-3 py-2"></textarea>
+        </div>
+        <div class="mb-4">
+            <label class="block font-semibold mb-2">Image de couverture</label>
+            <input type="text" name="cover_image" class="w-full border rounded px-3 py-2">
+        </div>
+        <div class="flex justify-between">
+            <button type="submit" class="vintage-btn text-white px-6 py-2 rounded-lg font-semibold">Ajouter</button>
+            <a href="{{ url_for('index') }}" class="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition">🏠 Accueil</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

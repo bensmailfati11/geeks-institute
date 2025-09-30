@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Menu du Restaurant</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 20px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007BFF;
+            margin: 0 5px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+    <h1>Menu</h1>
+    <a href="/add">Ajouter un plat</a>
+    <table border="1">
+        <tr>
+            <th>Nom</th>
+            <th>Prix</th>
+            <th>Actions</th>
+        </tr>
+        {% for item in items %}
+        <tr>
+            <td>{{ item[1] }}</td> <!-- index 1 = name -->
+            <td>{{ item[2] }}</td> <!-- index 2 = price -->
+            <td>
+                <a href="/update/{{ item[0] }}">Modifier</a>
+                <a href="/delete/{{ item[0] }}">Supprimer</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bibliothèque Électronique</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Couleurs personnalisées pour le thème bibliothèque */
+        .bg-library-primary { background-color: #8B4513; }
+        .bg-library-secondary { background-color: #e3bb99; }
+        .bg-library-accent { background-color: #DAA520; }
+        .text-library-primary { color: #8B4513; }
+        .text-library-secondary { color: #F5F5DC; }
+        .text-library-accent { color: #DAA520; }
+        .book-card { transition: all 0.3s ease; border-left: 4px solid #DAA520; }
+        .book-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(139, 69, 19, 0.2); }
+        .vintage-btn { background: linear-gradient(145deg, #8B4513, #A0522D); border: 1px solid #DAA520; transition: all 0.3s ease; }
+        .vintage-btn:hover { background: linear-gradient(145deg, #A0522D, #8B4513); transform: scale(1.05); }
+    </style>
+</head>
+<body class="bg-library-secondary min-h-screen">
+
+<nav class="bg-library-primary text-library-secondary shadow-2xl">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+            <span class="text-3xl">📚</span>
+            <div>
+                <h1 class="text-2xl font-serif font-bold">Bibliothèque</h1>
+                <p class="text-library-accent text-sm">Votre univers littéraire</p>
+            </div>
+        </div>
+        <div class="flex space-x-6 items-center">
+            <!-- Menu de navigation -->
+            <div class="flex space-x-6 items-center">
+                <a href="{{ url_for('index') }}" class="px-4 py-2 rounded-lg hover:bg-library-accent hover:text-white transition duration-300 font-medium">
+                    Accueil
+                </a>
+                <a href="{{ url_for('categories') }}" class="px-4 py-2 rounded-lg hover:bg-library-accent hover:text-white transition duration-300 font-medium">
+                    Catégories
+                </a>
+                <a href="{{ url_for('authors') }}" class="px-4 py-2 rounded-lg hover:bg-library-accent hover:text-white transition duration-300 font-medium">
+                    Auteurs
+                </a>
+                <a href="{{ url_for('dashboard') }}" class="px-4 py-2 rounded-lg hover:bg-library-accent hover:text-white transition duration-300 font-medium">
+                    Dashboard
+                </a>
+
+                <!-- Formulaire recherche -->
+                <form action="{{ url_for('search') }}" method="GET" class="flex items-center">
+                    <input type="text" name="q" placeholder="Rechercher un livre..." 
+                        class="px-2 py-1 rounded-l border border-gray-300">
+                    <button type="submit" class="bg-library-primary text-white px-3 py-1 rounded-r hover:bg-library-accent transition">
+                        🔍
+                    </button>
+                </form>
+
+                <a href="{{ url_for('create') }}" class="vintage-btn text-white px-6 py-2 rounded-lg font-semibold">
+                    + Ajouter un Livre
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="bg-gradient-to-r from-library-primary to-brown-800 text-white py-12 text-center">
+    <h2 class="text-4xl font-serif font-bold mb-4">Bienvenue dans votre Bibliothèque</h2>
+    <p class="text-xl opacity-90">Découvrez, explorez et gérez votre collection de livres</p>
+</div>
+
+<main class="container mx-auto py-8 px-4">
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="bg-library-primary text-library-secondary py-8 mt-12 text-center">
+    <div class="flex justify-center space-x-6 mb-4">
+        <span class="text-2xl">📖</span>
+        <span class="text-2xl">✍️</span>
+        <span class="text-2xl">🔍</span>
+    </div>
+    <p class="text-lg font-serif">&copy; 2024 Bibliothèque Électronique. Tous droits réservés.</p>
+    <p class="text-library-accent mt-2">Développé avec passion pour les amoureux des livres</p>
+</footer>
+
+</body>
+</html>
