@@ -6,28 +6,83 @@
     <title>Bibliothèque Électronique</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Couleurs personnalisées pour le thème bibliothèque */
-        .bg-library-primary { background-color: #8B4513; }
-        .bg-library-secondary { background-color: #e3bb99; }
-        .bg-library-accent { background-color: #DAA520; }
-        .text-library-primary { color: #8B4513; }
-        .text-library-secondary { color: #F5F5DC; }
-        .text-library-accent { color: #DAA520; }
-        .book-card { transition: all 0.3s ease; border-left: 4px solid #DAA520; }
-        .book-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(139, 69, 19, 0.2); }
-        .vintage-btn { background: linear-gradient(145deg, #8B4513, #A0522D); border: 1px solid #DAA520; transition: all 0.3s ease; }
-        .vintage-btn:hover { background: linear-gradient(145deg, #A0522D, #8B4513); transform: scale(1.05); }
+        /* Nouvelle palette de couleurs douce et calme */
+        :root {
+            --primary: #8B7355;    /* Brun doux */
+            --secondary: #d8bfa1;  /* Beige clair */
+            --accent: #A1887F;     /* Brun moyen */
+            --light: #c4aa87;      /* Beige très clair */
+            --text: #5D4037;       /* Brun foncé pour le texte */
+        }
+
+        .bg-library-primary { background-color: var(--primary); }
+        .bg-library-secondary { background-color: var(--secondary); }
+        .bg-library-accent { background-color: var(--accent); }
+        .bg-library-light { background-color: var(--light); }
+        
+        .text-library-primary { color: var(--primary); }
+        .text-library-secondary { color: var(--secondary); }
+        .text-library-accent { color: var(--accent); }
+        .text-library-dark { color: var(--text); }
+
+        .book-card { 
+            transition: all 0.3s ease; 
+            border-left: 4px solid var(--accent);
+            background: linear-gradient(145deg, #392f2f, var(--light));
+        }
+        
+        .book-card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 15px 35px rgba(139, 115, 85, 0.15);
+            background: linear-gradient(145deg, var(--light), #ffffff);
+        }
+
+        .category-card {
+            transition: all 0.4s ease;
+            background: linear-gradient(145deg, #ffffff, var(--light));
+        }
+
+        .category-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(139, 115, 85, 0.2);
+        }
+
+        .vintage-btn { 
+            background: linear-gradient(145deg, var(--primary), var(--accent)); 
+            border: none;
+            transition: all 0.3s ease; 
+        }
+        
+        .vintage-btn:hover { 
+            background: linear-gradient(145deg, var(--accent), var(--primary)); 
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(139, 115, 85, 0.3);
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--light) 0%, #f9ddba 50%, var(--secondary) 100%);
+            min-height: 100vh;
+        }
+
+        /* Animation subtile pour les images */
+        img {
+            transition: transform 0.5s ease;
+        }
+
+        img:hover {
+            transform: scale(1.05);
+        }
     </style>
 </head>
-<body class="bg-library-secondary min-h-screen">
+<body class="bg-library-light min-h-screen">
 
-<nav class="bg-library-primary text-library-secondary shadow-2xl">
+<nav class="bg-library-primary text-white shadow-2xl">
     <div class="container mx-auto px-4 py-4 flex justify-between items-center">
         <div class="flex items-center space-x-3">
             <span class="text-3xl">📚</span>
             <div>
-                <h1 class="text-2xl font-serif font-bold">Bibliothèque</h1>
-                <p class="text-library-accent text-sm">Votre univers littéraire</p>
+                <h1 class="text-2xl font-serif font-bold">Bibliothèque Sereine</h1>
+                <p class="text-library-secondary text-sm">Votre havre de paix littéraire</p>
             </div>
         </div>
         <div class="flex space-x-6 items-center">
@@ -49,37 +104,42 @@
                 <!-- Formulaire recherche -->
                 <form action="{{ url_for('search') }}" method="GET" class="flex items-center">
                     <input type="text" name="q" placeholder="Rechercher un livre..." 
-                        class="px-2 py-1 rounded-l border border-gray-300">
-                    <button type="submit" class="bg-library-primary text-white px-3 py-1 rounded-r hover:bg-library-accent transition">
+                        class="px-3 py-2 rounded-l border border-gray-300 focus:ring-2 focus:ring-library-primary focus:border-transparent">
+                    <button type="submit" class="bg-library-accent text-white px-4 py-2 rounded-r hover:bg-library-primary transition">
                         🔍
                     </button>
                 </form>
 
-                <a href="{{ url_for('create') }}" class="vintage-btn text-white px-6 py-2 rounded-lg font-semibold">
-                    + Ajouter un Livre
+                <a href="{{ url_for('create') }}" class="vintage-btn text-white px-6 py-3 rounded-lg font-semibold">
+                    ＋ Ajouter un Livre
                 </a>
             </div>
         </div>
     </div>
 </nav>
 
-<div class="bg-gradient-to-r from-library-primary to-brown-800 text-white py-12 text-center">
-    <h2 class="text-4xl font-serif font-bold mb-4">Bienvenue dans votre Bibliothèque</h2>
-    <p class="text-xl opacity-90">Découvrez, explorez et gérez votre collection de livres</p>
+<div class="bg-gradient-to-r from-library-primary to-library-accent text-white py-16 text-center">
+    <div class="container mx-auto px-4">
+        <h2 class="text-4xl font-serif font-bold mb-4">Bienvenue dans votre Bibliothèque</h2>
+        <p class="text-xl opacity-90 max-w-2xl mx-auto">Découvrez, explorez et gérez votre collection de livres dans une atmosphère calme et sereine</p>
+    </div>
 </div>
 
 <main class="container mx-auto py-8 px-4">
     {% block content %}{% endblock %}
 </main>
 
-<footer class="bg-library-primary text-library-secondary py-8 mt-12 text-center">
-    <div class="flex justify-center space-x-6 mb-4">
-        <span class="text-2xl">📖</span>
-        <span class="text-2xl">✍️</span>
-        <span class="text-2xl">🔍</span>
+<footer class="bg-library-primary text-library-secondary py-12 mt-16">
+    <div class="container mx-auto px-4 text-center">
+        <div class="flex justify-center space-x-8 mb-6">
+            <span class="text-3xl">📖</span>
+            <span class="text-3xl">✍️</span>
+            <span class="text-3xl">🌿</span>
+            <span class="text-3xl">🔍</span>
+        </div>
+        <p class="text-lg font-serif mb-2">&copy; 2024 Bibliothèque Sereine. Tous droits réservés.</p>
+        <p class="text-library-secondary opacity-80">Développé avec passion pour les amoureux des livres et de la tranquillité</p>
     </div>
-    <p class="text-lg font-serif">&copy; 2024 Bibliothèque Électronique. Tous droits réservés.</p>
-    <p class="text-library-accent mt-2">Développé avec passion pour les amoureux des livres</p>
 </footer>
 
 </body>

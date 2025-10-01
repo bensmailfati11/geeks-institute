@@ -3,59 +3,94 @@
 {% block content %}
 <div class="max-w-6xl mx-auto">
     {% if category %}
-    <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
-        <div class="relative h-64">
-            <img src="{{ category.cover_image }}" alt="{{ category.name }}" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-library-primary bg-opacity-40"></div>
-            <div class="absolute bottom-0 left-0 p-8 text-white">
-                <h1 class="text-4xl font-serif font-bold">{{ category.name }}</h1>
-                <p class="text-xl">{{ category.book_count }} livres</p>
+    <!-- En-tête de la catégorie -->
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
+        <div class="relative h-80 bg-gradient-to-r from-library-primary to-brown-800">
+            <div class="absolute inset-0 flex items-center justify-between px-8">
+                <div class="text-white">
+                    <h1 class="text-5xl font-serif font-bold mb-4">{{ category.name }}</h1>
+                    <p class="text-2xl opacity-90 mb-4">{{ category.description }}</p>
+                    <div class="flex items-center space-x-6">
+                        <span class="text-library-accent text-xl font-semibold">{{ category.book_count }} livres disponibles</span>
+                        <span class="text-4xl bg-library-primary bg-opacity-70 rounded-full p-3">{{ category.icon }}</span>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="p-8">
-            <p class="text-gray-700 leading-relaxed">{{ category.description }}</p>
         </div>
     </div>
 
-    <div class="mb-8">
-        <h2 class="text-3xl font-serif font-bold text-library-primary mb-6">Livres de {{ category.name }}</h2>
+    <!-- Livres de la catégorie -->
+    <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+        <h2 class="text-3xl font-serif font-bold text-library-primary mb-8 text-center">📚 Livres dans "{{ category.name }}"</h2>
+        
         {% if books %}
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {% for book in books %}
-            <div class="book-card bg-white rounded-lg shadow-md p-6">
-                <div class="flex space-x-4">
-                    <img src="{{ book.cover_image }}" alt="{{ book.title }}" class="w-16 h-24 object-cover rounded">
-                    <div class="flex-1">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-1">{{ book.title }}</h3>
-                        <p class="text-library-primary text-sm mb-1">{{ book.genre }}</p>
-                        <p class="text-gray-500 text-xs mb-3 line-clamp-2">{{ book.description }}</p>
-                        <a href="{{ url_for('details', book_id=book.id) }}" class="inline-block bg-library-primary text-white px-4 py-1 rounded text-sm hover:bg-brown-800">
-                           Lire plus
+            <div class="book-card bg-library-secondary rounded-xl p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                <div class="flex flex-col">
+                    <div class="flex items-start space-x-4 mb-4">
+                        <img src="{{ book.cover_image or '/static/images/default-book.jpg' }}" 
+                             alt="{{ book.title }}" 
+                             class="w-20 h-28 object-cover rounded-lg shadow-md"
+                             onerror="this.src='/static/images/default-book.jpg'">
+                        <div class="flex-1">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">{{ book.title }}</h3>
+                            <p class="text-library-primary font-medium mb-2">par {{ book.author_name or 'Auteur inconnu' }}</p>
+                            {% if book.genre %}
+                            <span class="bg-library-primary text-white px-3 py-1 rounded-full text-xs">{{ book.genre }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <p class="text-gray-600 text-sm line-clamp-3 mb-4 flex-1">{{ book.description or 'Aucune description disponible.' }}</p>
+                    <div class="flex justify-between items-center">
+                        <a href="{{ url_for('details', book_id=book.id) }}" 
+                           class="vintage-btn text-white px-4 py-2 rounded-lg text-sm font-semibold hover:shadow-lg transition">
+                           Voir détails
                         </a>
+                        {% if book.publication_year %}
+                        <span class="text-xs text-gray-500">{{ book.publication_year }}</span>
+                        {% endif %}
                     </div>
                 </div>
             </div>
             {% endfor %}
         </div>
         {% else %}
-        <div class="text-center py-12 bg-yellow-50 rounded-lg">
-            <span class="text-4xl">📖</span>
-            <p class="text-gray-600 mt-2">Aucun livre trouvé pour cette catégorie.</p>
+        <div class="text-center py-16">
+            <div class="text-8xl mb-6 text-gray-300">📖</div>
+            <h3 class="text-2xl font-semibold text-gray-500 mb-4">Aucun livre dans cette catégorie</h3>
+            <p class="text-gray-400 text-lg mb-6">Les livres seront bientôt ajoutés à cette collection.</p>
+            <a href="{{ url_for('create') }}" class="vintage-btn text-white px-8 py-4 rounded-lg font-semibold text-lg inline-block">
+                ＋ Ajouter un Livre
+            </a>
         </div>
         {% endif %}
     </div>
 
-    <div class="flex space-x-4 justify-center">
-        <a href="{{ url_for('categories') }}" class="vintage-btn text-white px-6 py-3 rounded-lg">↩️ Retour aux Catégories</a>
-        <a href="{{ url_for('index') }}" class="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition">🏠 Accueil</a>
+    <!-- Navigation -->
+    <div class="flex justify-between items-center mb-8">
+        <a href="{{ url_for('categories') }}" class="vintage-btn text-white px-8 py-4 rounded-xl font-semibold text-lg hover:shadow-lg transition">
+            ← Retour aux Catégories
+        </a>
+        <a href="{{ url_for('index') }}" class="bg-gray-500 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-600 transition">
+            🏠 Page d'Accueil
+        </a>
     </div>
 
     {% else %}
-    <div class="text-center py-12">
-        <div class="text-6xl mb-4">❌</div>
-        <h2 class="text-2xl font-semibold text-gray-600">Catégorie Non Trouvée</h2>
-        <p class="text-gray-500 mb-4">La catégorie que vous recherchez n’existe pas.</p>
-        <a href="{{ url_for('categories') }}" class="vintage-btn text-white px-6 py-3 rounded-lg">✍️ Parcourir les Catégories</a>
+    <!-- Catégorie non trouvée -->
+    <div class="text-center py-20 bg-white rounded-2xl shadow-lg">
+        <div class="text-8xl mb-6 text-gray-300">❌</div>
+        <h2 class="text-3xl font-semibold text-gray-600 mb-4">Catégorie Non Trouvée</h2>
+        <p class="text-gray-500 text-xl mb-8">La catégorie que vous recherchez n'existe pas ou a été supprimée.</p>
+        <div class="space-x-4">
+            <a href="{{ url_for('categories') }}" class="vintage-btn text-white px-8 py-4 rounded-xl font-semibold text-lg">
+                📂 Parcourir les Catégories
+            </a>
+            <a href="{{ url_for('index') }}" class="bg-gray-500 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-600 transition">
+                🏠 Retour à l'Accueil
+            </a>
+        </div>
     </div>
     {% endif %}
 </div>

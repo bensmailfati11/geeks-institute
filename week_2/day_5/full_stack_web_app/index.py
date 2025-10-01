@@ -6,19 +6,13 @@ from werkzeug.security import check_password_hash
 from functools import wraps
 
 app = Flask(__name__)
-<<<<<<< HEAD
-app.secret_key = 'votre_cle_secrete_tres_securisee'
-=======
-app.secret_key = "secret123"  # nécessaire pour flash() et session
->>>>>>> 3fd155cb0ffc30ba0e27ed460b56a527cf604c5c
-
-# --- CONFIG DB ---
+app.secret_key = 'votre-cle-secrete-ici'
 
 DB_CONFIG = {
     "host": "localhost",
     "database": "librarydb",
     "user": "postgres",
-    "password": "root",
+    "password": "ben123",
     "port": 5433
 }
 
@@ -40,12 +34,64 @@ def admin_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+# Fonction pour corriger les données des catégories
+def fix_categories_data():
+    """Corriger les données des catégories existantes"""
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        
+        # 1. Mettre à jour les icônes
+        icons_update = [
+            ('💪', 'Développement personnel'),
+            ('📖', 'Roman'),
+            ('🏛️', 'Histoire'), 
+            ('🔬', 'Science'),
+            ('📜', 'Poésie')
+        ]
+        
+        for icon, name in icons_update:
+            cur.execute("""
+                UPDATE categories 
+                SET icon = %s 
+                WHERE name = %s AND (icon IS NULL OR icon = '')
+            """, (icon, name))
+        
+        # 2. Mettre à jour les descriptions si vides
+        cur.execute("""
+            UPDATE categories 
+            SET description = 'Collection de livres ' || name
+            WHERE description IS NULL OR description = '' OR description LIKE 'Catégorie de livres%'
+        """)
+        
+        # 3. Mettre à jour les images de couverture
+        cur.execute("""
+            UPDATE categories 
+            SET cover_image = '/static/images/default-category.jpg'
+            WHERE cover_image IS NULL OR cover_image = ''
+        """)
+        
+        conn.commit()
+        cur.close()
+        conn.close()
+        print("✅ Données des catégories corrigées !")
+        return True
+    except Exception as e:
+        print(f"❌ Erreur correction données: {e}")
+        return False
+
 # --- ROUTE HOME / INDEX ---
 @app.route("/")
 def index():
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("SELECT * FROM books ORDER BY id DESC")
+    cur.execute("""
+        SELECT b.*, a.name as author_name, c.name as category_name
+        FROM books b
+        LEFT JOIN authors a ON b.author_id = a.id
+        LEFT JOIN categories c ON b.category_id = c.id
+        ORDER BY b.id DESC
+    """)
     books = cur.fetchall()
     cur.close()
     conn.close()
@@ -86,6 +132,7 @@ def create_author():
         conn.commit()
         cur.close()
         conn.close()
+        flash("Auteur créé avec succès!", "success")
         return redirect(url_for("authors"))
     return render_template("create_author.html")
 
@@ -96,7 +143,12 @@ def author_detail(author_id):
     cur = conn.cursor()
     cur.execute("SELECT * FROM authors WHERE id = %s", (author_id,))
     author = cur.fetchone()
-    cur.execute("SELECT * FROM books WHERE author_id = %s", (author_id,))
+    cur.execute("""
+        SELECT b.*, c.name as category_name 
+        FROM books b 
+        LEFT JOIN categories c ON b.category_id = c.id 
+        WHERE b.author_id = %s
+    """, (author_id,))
     books = cur.fetchall()
     cur.close()
     conn.close()
@@ -121,7 +173,7 @@ def search():
     conn.close()
     return render_template("search_results.html", books=books, query=query)
 
-# --- ROUTE CATEGORIES (LISTE + AJOUT) ---
+# --- ROUTE CATEGORIES (CORRIGÉE) ---
 @app.route("/categories", methods=["GET", "POST"])
 def categories():
     conn = get_db_connection()
@@ -129,25 +181,33 @@ def categories():
 
     if request.method == "POST":
         name = request.form["name"]
-        description = request.form.get("description", "")
-        icon = request.form.get("icon", "")
-        cover_image = request.form.get("cover_image", "")
+        description = request.form.get("description", f"Collection de livres {name}")
+        icon = request.form.get("icon", "📚")
+        cover_image = request.form.get("cover_image", "/static/images/default-category.jpg")
 
         cur.execute("""
             INSERT INTO categories (name, description, icon, cover_image)
             VALUES (%s, %s, %s, %s)
         """, (name, description, icon, cover_image))
         conn.commit()
-        flash("Category added successfully!", "success")
+        flash("Catégorie ajoutée avec succès !", "success")
+        cur.close()
+        conn.close()
         return redirect(url_for("categories"))
 
+    # REQUÊTE CORRIGÉE avec valeurs par défaut
     cur.execute("""
-        SELECT c.id, c.name, c.description, c.icon, c.cover_image,
-               COUNT(b.id) AS book_count
+        SELECT 
+            c.id, 
+            c.name, 
+            COALESCE(c.description, 'Collection de livres ' || c.name) as description,
+            COALESCE(c.icon, '📚') as icon,
+            COALESCE(c.cover_image, '/static/images/default-category.jpg') as cover_image,
+            COUNT(b.id) AS book_count
         FROM categories c
         LEFT JOIN books b ON b.category_id = c.id
-        GROUP BY c.id
-        ORDER BY c.id DESC
+        GROUP BY c.id, c.name, c.description, c.icon, c.cover_image
+        ORDER BY c.name
     """)
     categories = cur.fetchall()
     cur.close()
@@ -163,24 +223,53 @@ def delete_category(category_id):
     conn.commit()
     cur.close()
     conn.close()
-    flash("Category deleted successfully!", "success")
+    flash("Catégorie supprimée avec succès!", "success")
     return redirect(url_for("categories"))
 
-# --- DETAIL CATEGORY ---
+# --- DETAIL CATEGORY (CORRIGÉ) ---
 @app.route("/categories/<int:category_id>")
 def category_detail(category_id):
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("SELECT * FROM categories WHERE id = %s", (category_id,))
+    
+    # Détails de la catégorie
+    cur.execute("""
+        SELECT 
+            c.id, 
+            c.name, 
+            COALESCE(c.description, 'Collection de livres ' || c.name) as description,
+            COALESCE(c.icon, '📚') as icon,
+            COALESCE(c.cover_image, '/static/images/default-category.jpg') as cover_image
+        FROM categories c
+        WHERE c.id = %s
+    """, (category_id,))
     category = cur.fetchone()
-    cur.execute("SELECT * FROM books WHERE category_id = %s", (category_id,))
+    
+    if not category:
+        cur.close()
+        conn.close()
+        flash("Catégorie non trouvée", "error")
+        return redirect(url_for("categories"))
+    
+    # Livres de cette catégorie
+    cur.execute("""
+        SELECT b.*, a.name as author_name
+        FROM books b
+        LEFT JOIN authors a ON b.author_id = a.id
+        WHERE b.category_id = %s
+        ORDER BY b.title
+    """, (category_id,))
     books = cur.fetchall()
+    
+    # Compter les livres
+    book_count = len(books)
+    category['book_count'] = book_count
+    
     cur.close()
     conn.close()
     return render_template("category_detail.html", category=category, books=books)
 
-# --------- route delete author --------#
-
+# --- DELETE AUTHOR ---
 @app.route('/author/delete/<int:author_id>', methods=['POST'])
 def delete_author(author_id):
     try:
@@ -195,13 +284,18 @@ def delete_author(author_id):
         flash(f"Erreur lors de la suppression : {e}", 'danger')
     return redirect(url_for('authors'))
 
-
 # --- ROUTES LIVRES CRUD ---
 @app.route("/book/<int:book_id>")
 def details(book_id):
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("SELECT * FROM books WHERE id = %s", (book_id,))
+    cur.execute("""
+        SELECT b.*, a.name as author_name, c.name as category_name
+        FROM books b
+        LEFT JOIN authors a ON b.author_id = a.id
+        LEFT JOIN categories c ON b.category_id = c.id
+        WHERE b.id = %s
+    """, (book_id,))
     book = cur.fetchone()
     cur.close()
     conn.close()
@@ -222,7 +316,7 @@ def create():
         category_id = request.form["category_id"]
         genre = request.form.get("genre", "")
         description = request.form.get("description", "")
-        cover_image = request.form.get("cover_image", "")
+        cover_image = request.form.get("cover_image", "/static/images/default-book.jpg")
 
         cur.execute(
             "INSERT INTO books (title, author_id, category_id, genre, description, cover_image) VALUES (%s, %s, %s, %s, %s, %s)",
@@ -231,6 +325,7 @@ def create():
         conn.commit()
         cur.close()
         conn.close()
+        flash("Livre créé avec succès!", "success")
         return redirect(url_for("index"))
 
     cur.close()
@@ -265,6 +360,7 @@ def edit(book_id):
         conn.commit()
         cur.close()
         conn.close()
+        flash("Livre modifié avec succès!", "success")
         return redirect(url_for("details", book_id=book_id))
 
     cur.close()
@@ -279,6 +375,7 @@ def delete(book_id):
     conn.commit()
     cur.close()
     conn.close()
+    flash("Livre supprimé avec succès!", "success")
     return redirect(url_for("index"))
 
 # --- LOGIN / LOGOUT ---
@@ -299,6 +396,7 @@ def login():
             session["user_id"] = user["id"]
             session["username"] = user["username"]
             session["is_admin"] = user["is_admin"]
+            flash("Connexion réussie!", "success")
             return redirect(url_for("dashboard"))
         else:
             return render_template("login.html", error="Nom d'utilisateur ou mot de passe incorrect")
@@ -307,11 +405,15 @@ def login():
 @app.route("/logout")
 def logout():
     session.clear()
+    flash("Déconnexion réussie!", "info")
     return redirect(url_for("login"))
 
 # --- DASHBOARD ---
 @app.route("/dashboard")
 def dashboard():
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+        
     conn = get_db_connection()
     cur = conn.cursor()
     cur.execute("SELECT COUNT(*) AS total_books FROM books")
@@ -331,4 +433,6 @@ def dashboard():
 
 # --- LANCER L'APPLICATION ---
 if __name__ == "__main__":
+    # Corriger les données au démarrage
+    fix_categories_data()
     app.run(debug=True)

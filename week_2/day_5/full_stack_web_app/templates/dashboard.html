@@ -1,19 +1,58 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="max-w-6xl mx-auto mt-12">
-    <h1 class="text-4xl font-bold mb-6">Dashboard Admin</h1>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div class="bg-white p-6 rounded shadow text-center">
-            <h2 class="text-xl font-semibold">Livres</h2>
-            <p class="text-3xl font-bold text-green-600">{{ total_books }}</p>
+<div class="max-w-6xl mx-auto mt-8">
+    <h1 class="text-4xl font-serif font-bold text-library-primary mb-8 text-center">Tableau de Bord</h1>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <div class="bg-white p-8 rounded-2xl shadow-lg text-center border-t-4 border-green-400 transform hover:scale-105 transition">
+            <div class="text-5xl mb-4">📚</div>
+            <h2 class="text-xl font-semibold text-gray-700 mb-2">Livres</h2>
+            <p class="text-4xl font-bold text-green-600">{{ total_books }}</p>
         </div>
-        <div class="bg-white p-6 rounded shadow text-center">
-            <h2 class="text-xl font-semibold">Auteurs</h2>
-            <p class="text-3xl font-bold text-blue-600">{{ total_authors }}</p>
+        <div class="bg-white p-8 rounded-2xl shadow-lg text-center border-t-4 border-blue-400 transform hover:scale-105 transition">
+            <div class="text-5xl mb-4">✍️</div>
+            <h2 class="text-xl font-semibold text-gray-700 mb-2">Auteurs</h2>
+            <p class="text-4xl font-bold text-blue-600">{{ total_authors }}</p>
         </div>
-        <div class="bg-white p-6 rounded shadow text-center">
-            <h2 class="text-xl font-semibold">Catégories</h2>
-            <p class="text-3xl font-bold text-purple-600">{{ total_categories }}</p>
+        <div class="bg-white p-8 rounded-2xl shadow-lg text-center border-t-4 border-purple-400 transform hover:scale-105 transition">
+            <div class="text-5xl mb-4">📂</div>
+            <h2 class="text-xl font-semibold text-gray-700 mb-2">Catégories</h2>
+            <p class="text-4xl font-bold text-purple-600">{{ total_categories }}</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="bg-white p-6 rounded-2xl shadow-lg">
+            <h3 class="text-xl font-semibold text-library-primary mb-4">Actions Rapides</h3>
+            <div class="space-y-3">
+                <a href="{{ url_for('create') }}" class="vintage-btn text-white px-6 py-3 rounded-lg font-semibold block text-center">
+                    ＋ Ajouter un Livre
+                </a>
+                <a href="{{ url_for('categories') }}" class="bg-library-secondary text-library-primary px-6 py-3 rounded-lg font-semibold block text-center hover:bg-library-accent hover:text-white transition">
+                    📂 Gérer les Catégories
+                </a>
+                <a href="{{ url_for('authors') }}" class="bg-library-secondary text-library-primary px-6 py-3 rounded-lg font-semibold block text-center hover:bg-library-accent hover:text-white transition">
+                    ✍️ Gérer les Auteurs
+                </a>
+            </div>
+        </div>
+        
+        <div class="bg-white p-6 rounded-2xl shadow-lg">
+            <h3 class="text-xl font-semibold text-library-primary mb-4">Statistiques</h3>
+            <div class="space-y-4">
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">Livres par catégorie</span>
+                    <span class="font-semibold">À venir</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">Auteurs les plus prolifiques</span>
+                    <span class="font-semibold">À venir</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">Activité récente</span>
+                    <span class="font-semibold">À venir</span>
+                </div>
+            </div>
         </div>
     </div>
 </div>

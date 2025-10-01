@@ -1,71 +1,88 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menu du Restaurant</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f7f7f7;
-            margin: 20px;
-        }
-
-        h1 {
-            color: #333;
-            text-align: center;
-        }
-
-        a {
-            text-decoration: none;
-            color: #007BFF;
-            margin: 0 5px;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        table {
-            width: 80%;
-            margin: 20px auto;
-            border-collapse: collapse;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #007BFF;
-            color: white;
-        }
-
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body>
-    <h1>Menu</h1>
-    <a href="/add">Ajouter un plat</a>
-    <table border="1">
-        <tr>
-            <th>Nom</th>
-            <th>Prix</th>
-            <th>Actions</th>
-        </tr>
-        {% for item in items %}
-        <tr>
-            <td>{{ item[1] }}</td> <!-- index 1 = name -->
-            <td>{{ item[2] }}</td> <!-- index 2 = price -->
-            <td>
-                <a href="/update/{{ item[0] }}">Modifier</a>
-                <a href="/delete/{{ item[0] }}">Supprimer</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
+<body class="bg-gradient-to-br from-blue-500 to-purple-600 min-h-screen p-5">
+    <div class="container mx-auto max-w-6xl">
+        <!-- Header -->
+        <div class="text-center mb-10 text-white">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 drop-shadow-lg">
+                🍽️ Restaurant Menu Manager
+            </h1>
+            <p class="text-xl opacity-90">
+                Manage your restaurant menu easily
+            </p>
+        </div>
+
+        <!-- Actions Buttons -->
+        <div class="flex justify-center gap-4 mb-8 flex-wrap">
+            <a href="/add" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-full transition-all duration-300 shadow-lg flex items-center gap-2">
+                <i class="fas fa-plus"></i> Add Item
+            </a>
+            <a href="/api/menu" target="_blank" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-6 rounded-full transition-all duration-300 shadow-lg flex items-center gap-2">
+                <i class="fas fa-code"></i> View API
+            </a>
+        </div>
+
+        <!-- Menu Card -->
+        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+            <div class="bg-gray-800 text-white py-6 text-center">
+                <h2 class="text-2xl font-bold">
+                    <i class="fas fa-utensils mr-2"></i> Our Menu
+                </h2>
+            </div>
+
+            {% if items %}
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-700 text-white">
+                        <tr>
+                            <th class="py-4 px-6 text-left font-semibold">Item Name</th>
+                            <th class="py-4 px-6 text-left font-semibold">Price</th>
+                            <th class="py-4 px-6 text-left font-semibold">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                        <tr class="border-b border-gray-200 hover:bg-gray-50 transition-colors duration-200">
+                            <td class="py-4 px-6 font-medium text-gray-800">{{ item[1] }}</td>
+                            <td class="py-4 px-6">
+                                <span class="font-bold text-green-600 text-lg">{{ item[2] }} €</span>
+                            </td>
+                            <td class="py-4 px-6">
+                                <div class="flex gap-2 flex-wrap">
+                                    <a href="/update/{{ item[0] }}" class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-medium py-2 px-4 rounded-full text-sm transition-all duration-200 flex items-center gap-1">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <a href="/delete/{{ item[0] }}" 
+                                       class="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-full text-sm transition-all duration-200 flex items-center gap-1 delete-btn"
+                                       data-item-name="{{ item[1] }}"
+                                       onclick="return confirm('Are you sure you want to delete {{ item[1] }}?')">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-16 text-gray-600">
+                <div class="text-6xl mb-4">📝</div>
+                <h3 class="text-2xl font-bold mb-2">No items in menu</h3>
+                <p class="mb-6">Start by adding your first item!</p>
+                <a href="/add" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-8 rounded-full inline-block transition-all duration-300 shadow-lg">
+                    Add First Item
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
 </body>
 </html>

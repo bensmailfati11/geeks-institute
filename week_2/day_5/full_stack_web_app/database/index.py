@@ -5,7 +5,7 @@ def get_db_connection():
         host="localhost",
         database="librarydb",
         user="postgres",
-        password="root",
+        password="ben123",
         port=5433
     )
     return conn
