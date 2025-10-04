@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Exercises</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .exercise {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        table {
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+        td {
+            border: 1px solid black;
+            padding: 10px 15px;
+            text-align: center;
+            width: 50px;
+        }
+        button {
+            padding: 8px 16px;
+            margin: 5px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .result {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>JavaScript Exercises</h1>
+
+    <!-- Exercise 1: is_Blank -->
+    <div class="exercise">
+        <h2>Exercise 1: is_Blank</h2>
+        <button onclick="testIsBlank()">Test is_Blank</button>
+        <div id="result1" class="result"></div>
+    </div>
+
+    <!-- Exercise 2: Abbrev_name -->
+    <div class="exercise">
+        <h2>Exercise 2: Abbrev_name</h2>
+        <button onclick="testAbbrevName()">Test Abbrev_name</button>
+        <div id="result2" class="result"></div>
+    </div>
+
+    <!-- Exercise 3: SwapCase -->
+    <div class="exercise">
+        <h2>Exercise 3: SwapCase</h2>
+        <button onclick="testSwapCase()">Test SwapCase</button>
+        <div id="result3" class="result"></div>
+    </div>
+
+    <!-- Exercise 4: Omnipresent value -->
+    <div class="exercise">
+        <h2>Exercise 4: Omnipresent value</h2>
+        <button onclick="testIsOmnipresent()">Test Omnipresent</button>
+        <div id="result4" class="result"></div>
+    </div>
+
+    <!-- Exercise 5: Red table -->
+    <div class="exercise">
+        <h2>Exercise 5: Red table</h2>
+        <table id="mainTable">
+            <tr>
+                <td>1:1</td>
+                <td>2:1</td>
+                <td>3:1</td>
+                <td>4:1</td>
+                <td>5:1</td>
+            </tr>
+            <tr>
+                <td>1:2</td>
+                <td>2:2</td>
+                <td>3:2</td>
+                <td>4:2</td>
+                <td>5:2</td>
+            </tr>
+            <tr>
+                <td>1:3</td>
+                <td>2:3</td>
+                <td>3:3</td>
+                <td>4:3</td>
+                <td>5:3</td>
+            </tr>
+            <tr>
+                <td>1:4</td>
+                <td>2:4</td>
+                <td>3:4</td>
+                <td>4:4</td>
+                <td>5:4</td>
+            </tr>
+            <tr>
+                <td>1:5</td>
+                <td>2:5</td>
+                <td>3:5</td>
+                <td>4:5</td>
+                <td>5:5</td>
+            </tr>
+        </table>
+        <button onclick="colorDiagonalCells()">Color Diagonal Cells Red</button>
+        <button onclick="resetTable()">Reset Table</button>
+    </div>
+
+    <script>
+        // Exercise 1: is_Blank
+        function isBlank(str) {
+            return str.trim() === '';
+        }
+
+        // Exercise 2: Abbrev_name
+        function abbrevName(fullName) {
+            const names = fullName.split(' ');
+            if (names.length === 1) return fullName;
+            return names[0] + ' ' + names[names.length - 1].charAt(0) + '.';
+        }
+
+        // Exercise 3: SwapCase
+        function swapCase(str) {
+            let result = '';
+            for (let i = 0; i < str.length; i++) {
+                const char = str[i];
+                result += char === char.toUpperCase() ? char.toLowerCase() : char.toUpperCase();
+            }
+            return result;
+        }
+
+        // Exercise 4: Omnipresent value
+        function isOmnipresent(arr, value) {
+            for (let subArray of arr) {
+                if (!subArray.includes(value)) return false;
+            }
+            return true;
+        }
+
+        // Exercise 5: Red table
+        function colorDiagonalCells() {
+            const table = document.getElementById('mainTable');
+            const rows = table.getElementsByTagName('tr');
+            
+            for (let i = 0; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName('td');
+                if (cells[i]) {
+                    cells[i].style.backgroundColor = 'red';
+                    cells[i].style.color = 'white';
+                    cells[i].style.fontWeight = 'bold';
+                }
+            }
+        }
+
+        function resetTable() {
+            const table = document.getElementById('mainTable');
+            const cells = table.getElementsByTagName('td');
+            
+            for (let cell of cells) {
+                cell.style.backgroundColor = '';
+                cell.style.color = '';
+                cell.style.fontWeight = '';
+            }
+        }
+
+        // Test functions for HTML interface
+        function testIsBlank() {
+            const result1 = document.getElementById('result1');
+            result1.innerHTML = `
+                isBlank(''): ${isBlank('')}<br>
+                isBlank('   '): ${isBlank('   ')}<br>
+                isBlank('abc'): ${isBlank('abc')}<br>
+                isBlank('  abc  '): ${isBlank('  abc  ')}
+            `;
+        }
+
+        function testAbbrevName() {
+            const result2 = document.getElementById('result2');
+            result2.innerHTML = `
+                abbrevName('Robin Singh'): "${abbrevName('Robin Singh')}"<br>
+                abbrevName('John Michael Doe'): "${abbrevName('John Michael Doe')}"<br>
+                abbrevName('Alice'): "${abbrevName('Alice')}"
+            `;
+        }
+
+        function testSwapCase() {
+            const result3 = document.getElementById('result3');
+            result3.innerHTML = `
+                swapCase('The Quick Brown Fox'): "${swapCase('The Quick Brown Fox')}"<br>
+                swapCase('Hello World'): "${swapCase('Hello World')}"<br>
+                swapCase('JavaScript'): "${swapCase('JavaScript')}"
+            `;
+        }
+
+        function testIsOmnipresent() {
+            const result4 = document.getElementById('result4');
+            result4.innerHTML = `
+                isOmnipresent([[1, 1], [1, 3], [5, 1], [6, 1]], 1): ${isOmnipresent([[1, 1], [1, 3], [5, 1], [6, 1]], 1)}<br>
+                isOmnipresent([[1, 1], [1, 3], [5, 1], [6, 1]], 6): ${isOmnipresent([[1, 1], [1, 3], [5, 1], [6, 1]], 6)}<br>
+                isOmnipresent([[3, 4], [8, 3, 2], [3], [9, 3], [5, 3], [4, 3]], 3): ${isOmnipresent([[3, 4], [8, 3, 2], [3], [9, 3], [5, 3], [4, 3]], 3)}
+            `;
+        }
+
+        // Auto-color table on page load
+        window.onload = colorDiagonalCells;
+
+        // Console tests
+        console.log("=== JavaScript Exercises ===");
+        console.log("Exercise 1 - isBlank(''):", isBlank(''));
+        console.log("Exercise 2 - abbrevName('Robin Singh'):", abbrevName('Robin Singh'));
+        console.log("Exercise 3 - swapCase('The Quick Brown Fox'):", swapCase('The Quick Brown Fox'));
+        console.log("Exercise 4 - isOmnipresent([[1,1],[1,3],[5,1],[6,1]], 1):", isOmnipresent([[1, 1], [1, 3], [5, 1], [6, 1]], 1));
+        console.log("Exercise 5 - DOM function ready");
+    </script>
+</body>
+</html>

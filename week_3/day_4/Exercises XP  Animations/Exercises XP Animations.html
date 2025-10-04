@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercises XP: Animations</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .exercise {
+            background: rgba(255, 255, 255, 0.95);
+            margin: 30px 0;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            color: #4285f4;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #4285f4;
+            padding-bottom: 10px;
+        }
+
+        button {
+            background: linear-gradient(45deg, #4285f4, #34a853);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            margin: 10px 5px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(66, 133, 244, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(66, 133, 244, 0.4);
+        }
+
+        /* Exercise 1 Styles */
+        #container1 {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 2px dashed #4285f4;
+            min-height: 100px;
+        }
+
+        #container1 p {
+            background: yellow;
+            color: red;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid red;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Exercise 2 Styles */
+        #container2 {
+            width: 400px;
+            height: 400px;
+            position: relative;
+            background: yellow;
+            border-radius: 10px;
+            margin: 20px auto;
+            border: 3px solid #333;
+            overflow: hidden;
+        }
+
+        #animate {
+            width: 50px;
+            height: 50px;
+            position: absolute;
+            background: linear-gradient(45deg, #ea4335, #d23c2e);
+            border-radius: 50%;
+            top: 175px;
+            left: 0;
+            box-shadow: 0 4px 15px rgba(234, 67, 53, 0.4);
+            transition: left 0.1s linear;
+        }
+
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .reset-btn {
+            background: linear-gradient(45deg, #ea4335, #d23c2e);
+        }
+
+        .info-panel {
+            background: #e8f0fe;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #4285f4;
+        }
+
+        .counter {
+            font-weight: bold;
+            color: #4285f4;
+            font-size: 1.2em;
+        }
+
+        .status {
+            padding: 8px 15px;
+            border-radius: 20px;
+            background: #34a853;
+            color: white;
+            display: inline-block;
+            margin: 5px;
+            font-size: 0.9em;
+        }
+
+        .status.stopped {
+            background: #ea4335;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌟 Exercises XP: Animations 🌟</h1>
+
+        <!-- Exercise 1: Timer -->
+        <div class="exercise">
+            <h2>⏰ Exercise 1: Timer</h2>
+            
+            <div class="info-panel">
+                <div>Paragraphs Created: <span class="counter" id="paragraphCount">0</span></div>
+                <div>Status: <span class="status" id="timerStatus">Waiting...</span></div>
+            </div>
+
+            <div class="controls">
+                <button onclick="timerExercises.startPart1()">Part I: Alert after 2s</button>
+                <button onclick="timerExercises.startPart2()">Part II: Add Paragraph after 2s</button>
+                <button onclick="timerExercises.startPart3()">Part III: Add Paragraph every 2s</button>
+                <button id="clearIntervalBtn">Clear Interval</button>
+                <button class="reset-btn" onclick="timerExercises.reset()">Reset Exercise 1</button>
+            </div>
+
+            <div id="container1"></div>
+        </div>
+
+        <!-- Exercise 2: Move the Box -->
+        <div class="exercise">
+            <h2>📦 Exercise 2: Move the Box</h2>
+            
+            <div class="info-panel">
+                <div>Box Position: <span class="counter" id="boxPosition">0px</span></div>
+                <div>Status: <span class="status stopped" id="boxStatus">Ready</span></div>
+            </div>
+
+            <div class="controls">
+                <button onclick="boxAnimation.startMovement()">Click Me to Move Box</button>
+                <button class="reset-btn" onclick="boxAnimation.reset()">Reset Box Position</button>
+            </div>
+
+            <div id="container2">
+                <div id="animate"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Link to external JavaScript file -->
+    <script src="Exercises XP  Animations.js"></script>
+</body>
+</html>

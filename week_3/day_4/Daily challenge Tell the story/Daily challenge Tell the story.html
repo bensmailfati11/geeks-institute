@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Challenge: Mad Libs</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #ff6b6b;
+            margin-bottom: 30px;
+            font-size: 3em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        #libform {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 3px dashed #ff6b6b;
+        }
+
+        label {
+            display: inline-block;
+            width: 150px;
+            font-weight: bold;
+            color: #ff6b6b;
+            margin: 10px 0 5px;
+        }
+
+        input[type="text"] {
+            width: 250px;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: #ff6b6b;
+            box-shadow: 0 0 10px rgba(255, 107, 107, 0.3);
+            outline: none;
+            transform: scale(1.02);
+        }
+
+        button {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            margin: 15px 10px 15px 0;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        #shuffle-button {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+        }
+
+        #story {
+            background: #ffeaa7;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            font-size: 1.2em;
+            line-height: 1.6;
+            border-left: 5px solid #fdcb6e;
+            min-height: 100px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .story-highlight {
+            background: #ff6b6b;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .error {
+            color: #e74c3c;
+            font-weight: bold;
+            margin: 10px 0;
+            padding: 10px;
+            background: #ffeaa7;
+            border-radius: 5px;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .success {
+            color: #27ae60;
+            font-weight: bold;
+            margin: 10px 0;
+            padding: 10px;
+            background: #d5f4e6;
+            border-radius: 5px;
+            border-left: 4px solid #27ae60;
+        }
+
+        .instructions {
+            background: #dfe6e9;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #636e72;
+        }
+
+        .word-counter {
+            text-align: center;
+            margin: 15px 0;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .fun-emoji {
+            font-size: 1.5em;
+            margin: 0 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎭 Mad Libs Game 🎭</h1>
+        
+        <div class="instructions">
+            <p>✨ <strong>How to play:</strong> Fill in all the words below, then click "Lib it!" to generate a funny story! 
+            Use the "Shuffle Story" button to get different stories with your same words!</p>
+        </div>
+
+        <form id="libform">
+            <label for="noun">Noun:</label>
+            <input type="text" id="noun" placeholder="e.g., banana, dragon, pizza"><br>
+            
+            <label for="adjective">Adjective:</label>
+            <input type="text" id="adjective" placeholder="e.g., fluffy, sparkly, gigantic"><br>
+            
+            <label for="person">Someone's Name:</label>
+            <input type="text" id="person" placeholder="e.g., Bob, Alice, Superman"><br>
+            
+            <label for="verb">Verb:</label>
+            <input type="text" id="verb" placeholder="e.g., dance, fly, snore"><br>
+            
+            <label for="place">A place:</label>
+            <input type="text" id="place" placeholder="e.g., kitchen, Mars, library"><br>
+            
+            <button type="submit" id="lib-button">🎨 Lib it!</button>
+            <button type="button" id="shuffle-button">🔀 Shuffle Story</button>
+        </form>
+
+        <div class="word-counter">
+            Words entered: <span id="wordCount">0</span>/5
+        </div>
+
+        <p><strong>Generated story:</strong></p>
+        <div id="story">
+            <em>Your hilarious story will appear here after you fill in the words and click "Lib it!"</em>
+        </div>
+
+        <div id="message"></div>
+    </div>
+
+    <script src="Daily challenge Tell the story.js"></script>
+</body>
+</html>

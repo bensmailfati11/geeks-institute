@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Challenge: Letters Only</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #4285f4, #34a853);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .input-group {
+            margin: 30px 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #4285f4;
+            font-size: 1.1em;
+        }
+
+        #lettersInput {
+            width: 100%;
+            max-width: 400px;
+            padding: 15px 20px;
+            font-size: 1.2em;
+            border: 3px solid #4285f4;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            background: white;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        #lettersInput:focus {
+            outline: none;
+            box-shadow: 0 0 20px rgba(66, 133, 244, 0.3);
+            transform: scale(1.02);
+            border-color: #34a853;
+        }
+
+        #lettersInput::placeholder {
+            color: #bbb;
+            font-weight: normal;
+        }
+
+        .info-panel {
+            background: #e8f0fe;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 25px 0;
+            border-left: 4px solid #4285f4;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #4285f4;
+            margin-top: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-weight: bold;
+            animation: fadeIn 0.3s ease;
+            display: none;
+        }
+
+        .message.error {
+            background: #ffeaa7;
+            color: #e74c3c;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .message.success {
+            background: #d5f4e6;
+            color: #27ae60;
+            border-left: 4px solid #27ae60;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .key-codes {
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .key-code-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .instructions {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 25px 0;
+            border-left: 4px solid #ffc107;
+        }
+
+        .feature-list {
+            text-align: left;
+            margin: 15px 0;
+        }
+
+        .feature-list li {
+            margin: 10px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .feature-list li::before {
+            content: '✅';
+            position: absolute;
+            left: 0;
+        }
+
+        .reset-btn {
+            background: linear-gradient(45deg, #ea4335, #d23c2e);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            margin: 15px 5px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(234, 67, 53, 0.3);
+        }
+
+        .reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(234, 67, 53, 0.4);
+        }
+
+        .event-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .event-btn {
+            background: linear-gradient(45deg, #fbbc05, #e6a000);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .event-btn.active {
+            background: linear-gradient(45deg, #34a853, #2e8b47);
+            transform: scale(1.05);
+        }
+
+        .demo-text {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            border: 2px dashed #dee2e6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔤 Letters Only</h1>
+        <p class="subtitle">Daily Challenge: Input that accepts only letters</p>
+
+        <div class="instructions">
+            <h3>🎯 Challenge Instructions</h3>
+            <p>Create an input that takes/shows only letters (no numbers or special characters)</p>
+            <div class="feature-list">
+                <li>Accepts only A-Z, a-z characters</li>
+                <li>Rejects numbers and special characters</li>
+                <li>Real-time validation</li>
+                <li>Multiple event handling methods</li>
+            </div>
+        </div>
+
+        <div class="event-buttons">
+            <button class="event-btn active" onclick="lettersApp.setEventType('input')">📝 Input Event</button>
+            <button class="event-btn" onclick="lettersApp.setEventType('keyup')">⌨️ KeyUp Event</button>
+            <button class="event-btn" onclick="lettersApp.setEventType('keydown')">⌨️ KeyDown Event</button>
+            <button class="event-btn" onclick="lettersApp.setEventType('keypress')">⌨️ KeyPress Event</button>
+        </div>
+
+        <div class="input-group">
+            <label for="lettersInput">Enter letters only:</label>
+            <input type="text" id="lettersInput" placeholder="Type here... only letters will be accepted">
+            <div class="demo-text">
+                Try typing: "Hello123!@# World" → Becomes: "Hello World"
+            </div>
+        </div>
+
+        <div class="info-panel">
+            <strong>Current Event:</strong> <span id="currentEvent">input</span>
+            <br>
+            <strong>Filter Method:</strong> <span id="filterMethod">Regular Expression</span>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-label">Characters Entered</div>
+                <div class="stat-value" id="totalChars">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Letters Accepted</div>
+                <div class="stat-value" id="acceptedChars">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Characters Rejected</div>
+                <div class="stat-value" id="rejectedChars">0</div>
+            </div>
+        </div>
+
+        <div class="message" id="message"></div>
+
+        <div class="key-codes">
+            <h4>🔑 Allowed Key Codes (Letters only):</h4>
+            <div class="key-code-item">
+                <span>A-Z</span>
+                <span>65-90</span>
+            </div>
+            <div class="key-code-item">
+                <span>a-z</span>
+                <span>97-122</span>
+            </div>
+            <div class="key-code-item">
+                <span>Space</span>
+                <span>32</span>
+            </div>
+        </div>
+
+        <button class="reset-btn" onclick="lettersApp.resetAll()">🔄 Reset All</button>
+    </div>
+
+    <script src="Daily Challenge Letters.js"></script>
+</body>
+</html>

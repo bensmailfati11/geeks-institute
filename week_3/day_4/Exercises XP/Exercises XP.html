@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercises XP - DOM Manipulation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .exercise {
+            background: white;
+            margin: 30px 0;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: 5px solid #4285f4;
+        }
+
+        h1 {
+            color: #4285f4;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: #34a853;
+            margin-bottom: 15px;
+        }
+
+        h3 {
+            color: #ea4335;
+            margin-bottom: 10px;
+        }
+
+        p {
+            line-height: 1.6;
+            margin: 10px 0;
+        }
+
+        button {
+            background: #4285f4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #3367d6;
+        }
+
+        form {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            max-width: 300px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        input[type="submit"] {
+            background: #34a853;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        input[type="submit"]:hover {
+            background: #2e8b47;
+        }
+
+        .usersAnswer {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+
+        .usersAnswer li {
+            background: #e8f0fe;
+            padding: 8px 12px;
+            margin: 5px 0;
+            border-radius: 4px;
+            border-left: 3px solid #4285f4;
+        }
+
+        .fade-out {
+            animation: fadeOut 0.5s forwards;
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        .bold-text {
+            font-weight: bold;
+        }
+
+        .highlight {
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌟 Exercises XP - DOM Manipulation</h1>
+
+    <!-- Exercise 1 -->
+    <div class="exercise" id="exercise1">
+        <h2>Exercise 1: Change the Article</h2>
+        <article id="chocolateArticle">
+            <h1>Some Facts</h1>
+            <h2>The Chocolate</h2>
+            <h3>History of the chocolate</h3>
+            <p>Chocolate is made from tropical Theobroma cacao tree seeds. 
+            Its earliest use dates back to the Olmec civilization in Mesoamerica.</p>
+            <p>After the European discovery of the Americas, chocolate became 
+            very popular in the wider world, and its demand exploded.</p>
+            <p>Chocolate has since become a popular food product that millions enjoy every day, 
+            thanks to its unique, rich, and sweet taste.</p> 
+            <p>But what effect does eating chocolate have on our health?</p> 
+        </article>
+        <button id="makeBoldBtn">Make All Paragraphs Bold</button>
+    </div>
+
+    <!-- Exercise 2 -->
+    <div class="exercise" id="exercise2">
+        <h2>Exercise 2: Work with Forms</h2>
+        <form id="userForm">
+            <label for="fname">First name:</label>
+            <input type="text" id="fname" name="firstname">
+            <label for="lname">Last name:</label>
+            <input type="text" id="lname" name="lastname">
+            <input type="submit" value="Submit" id="submit">
+        </form> 
+        <ul class="usersAnswer"></ul>
+    </div>
+
+    <!-- Exercise 3 -->
+    <div class="exercise" id="exercise3">
+        <h2>Exercise 3: Transform the Sentence</h2>
+        <p id="boldParagraph">
+            <strong>Hello</strong> I hope you are enjoying <strong>this</strong> class. At the
+            <strong>end</strong> you <strong>will</strong> be great Developers!
+            <strong>Enjoy</strong> the <strong>JavaScript</strong> lessons
+        </p>
+    </div>
+
+    <!-- Exercise 4 -->
+    <div class="exercise" id="exercise4">
+        <h2>Exercise 4: Volume of a Sphere</h2>
+        <p>Input radius value and get the volume of a sphere.</p> 
+        <form id="sphereForm"> 
+            <label for="radius">Radius</label>
+            <input type="text" name="radius" id="radius" required> 
+            <label for="volume">Volume</label>
+            <input type="text" name="volume" id="volume" readonly> 
+            <input type="submit" value="Calculate" id="calculate">    
+        </form> 
+    </div>
+
+    <script src="Exercises XP.js"></script>
+</body>
+</html>

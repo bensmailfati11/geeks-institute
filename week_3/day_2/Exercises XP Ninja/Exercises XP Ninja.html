@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Exercises - Complete Solution</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .exercise {
+            margin: 40px 0;
+            padding: 25px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+        h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #2980b9;
+        }
+        .result {
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-family: monospace;
+        }
+        .test-buttons {
+            margin: 15px 0;
+        }
+        #calendarContainer {
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>JavaScript Exercises - Complete Solution</h1>
+
+        <!-- Exercise 1 -->
+        <div class="exercise">
+            <h2>Exercise 1: Random Number & Even Numbers</h2>
+            <div class="test-buttons">
+                <button onclick="testExercise1()">Test Exercise 1</button>
+            </div>
+            <div id="result1" class="result">Click the button to test</div>
+        </div>
+
+        <!-- Exercise 2 -->
+        <div class="exercise">
+            <h2>Exercise 2: Capitalized Letters</h2>
+            <div class="test-buttons">
+                <input type="text" id="inputString" value="abcdef" placeholder="Enter a string">
+                <button onclick="testExercise2()">Test Capitalization</button>
+            </div>
+            <div id="result2" class="result">Enter a string and click the button</div>
+        </div>
+
+        <!-- Exercise 3 -->
+        <div class="exercise">
+            <h2>Exercise 3: Palindrome Checker</h2>
+            <div class="test-buttons">
+                <input type="text" id="palindromeInput" value="madam" placeholder="Enter text to check">
+                <button onclick="testExercise3()">Check Palindrome</button>
+            </div>
+            <div id="result3" class="result">Enter text to check if it's a palindrome</div>
+        </div>
+
+        <!-- Exercise 4 -->
+        <div class="exercise">
+            <h2>Exercise 4: Biggest Number in Array</h2>
+            <div class="test-buttons">
+                <button onclick="testExercise4()">Test Array Examples</button>
+            </div>
+            <div id="result4" class="result">Click to test with different arrays</div>
+        </div>
+
+        <!-- Exercise 5 -->
+        <div class="exercise">
+            <h2>Exercise 5: Unique Elements</h2>
+            <div class="test-buttons">
+                <button onclick="testExercise5()">Test Unique Elements</button>
+            </div>
+            <div id="result5" class="result">Click to test duplicate removal</div>
+        </div>
+
+        <!-- Exercise 6 -->
+        <div class="exercise">
+            <h2>Exercise 6: Calendar Generator</h2>
+            <div id="calendarContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        // Include all the JavaScript exercise functions here
+        // (Copy the entire JavaScript code from above)
+
+        // Test functions for the HTML interface
+        function testExercise1() {
+            const result1 = document.getElementById('result1');
+            const evenNumbers = logEvenNumbers();
+            result1.innerHTML = `<strong>Even numbers:</strong> ${evenNumbers.join(', ')}`;
+        }
+
+        function testExercise2() {
+            const input = document.getElementById('inputString').value;
+            const result2 = document.getElementById('result2');
+            const [evenCap, oddCap] = capitalize(input);
+            result2.innerHTML = `
+                <strong>Input:</strong> ${input}<br>
+                <strong>Even indexes capitalized:</strong> ${evenCap}<br>
+                <strong>Odd indexes capitalized:</strong> ${oddCap}
+            `;
+        }
+
+        function testExercise3() {
+            const input = document.getElementById('palindromeInput').value;
+            const result3 = document.getElementById('result3');
+            const isPal = isPalindrome(input);
+            result3.innerHTML = `
+                <strong>Text:</strong> "${input}"<br>
+                <strong>Is palindrome?</strong> ${isPal ? '✅ YES' : '❌ NO'}
+            `;
+        }
+
+        function testExercise4() {
+            const result4 = document.getElementById('result4');
+            const test1 = biggestNumberInArray([-1, 0, 3, 100, 99, 2, 99]);
+            const test2 = biggestNumberInArray(['a', 3, 4, 2]);
+            const test3 = biggestNumberInArray([]);
+            
+            result4.innerHTML = `
+                <strong>Array [-1,0,3,100,99,2,99]:</strong> ${test1}<br>
+                <strong>Array ['a',3,4,2]:</strong> ${test2}<br>
+                <strong>Empty array []:</strong> ${test3}
+            `;
+        }
+
+        function testExercise5() {
+            const result5 = document.getElementById('result5');
+            const original = [1, 2, 3, 3, 3, 3, 4, 5];
+            const unique = getUniqueElements(original);
+            
+            result5.innerHTML = `
+                <strong>Original array:</strong> [${original.join(', ')}]<br>
+                <strong>Unique elements:</strong> [${unique.join(', ')}]
+            `;
+        }
+
+        // Initialize the page
+        window.onload = function() {
+            initCalendarDemo();
+            console.log("🎉 All exercises loaded and ready!");
+        };
+    </script>
+
+    <!-- Include the JavaScript file -->
+    <script src="Exercises XP Ninja.js"></script>
+</body>
+</html>

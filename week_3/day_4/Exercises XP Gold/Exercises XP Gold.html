@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercises XP Gold</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #4285f4, #34a853, #fbbc05, #ea4335);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .exercise {
+            background: white;
+            margin: 30px 0;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid #4285f4;
+        }
+
+        h2 {
+            color: #4285f4;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h2::before {
+            content: '🎯';
+            font-size: 1.2em;
+        }
+
+        select {
+            width: 100%;
+            max-width: 300px;
+            padding: 12px;
+            border: 2px solid #4285f4;
+            border-radius: 8px;
+            font-size: 1em;
+            margin: 10px 0;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        select:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(66, 133, 244, 0.3);
+            transform: scale(1.02);
+        }
+
+        button, input[type="button"] {
+            background: linear-gradient(45deg, #4285f4, #34a853);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            margin: 10px 5px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(66, 133, 244, 0.3);
+        }
+
+        button:hover, input[type="button"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(66, 133, 244, 0.4);
+        }
+
+        .delete-btn {
+            background: linear-gradient(45deg, #ea4335, #d23c2e);
+        }
+
+        .clear-btn {
+            background: linear-gradient(45deg, #fbbc05, #e6a000);
+        }
+
+        .result {
+            background: #e8f0fe;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #4285f4;
+            font-weight: bold;
+        }
+
+        .shopping-form {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: #4285f4;
+            box-shadow: 0 0 10px rgba(66, 133, 244, 0.3);
+            outline: none;
+        }
+
+        .shopping-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .shopping-list li {
+            background: linear-gradient(135deg, #34a853, #2e8b47);
+            color: white;
+            padding: 12px 20px;
+            margin: 8px 0;
+            border-radius: 8px;
+            animation: slideIn 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(52, 168, 83, 0.3);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .empty-message {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .item-counter {
+            background: #4285f4;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+
+        .exercise-info {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌟 Exercises XP Gold 🌟</h1>
+
+        <!-- Exercise 1: Select Music Genre -->
+        <div class="exercise">
+            <h2>Exercise 1: Select a kind of Music</h2>
+            <div class="exercise-info">
+                <p>• Display selected value • Add "Classic" option • Set "Classic" as default</p>
+            </div>
+            
+            <select id="genres">
+                <option value="rock">Rock</option>
+                <option value="blues" selected>Blues</option>
+            </select>
+            
+            <div class="result" id="selectedGenre">
+                Selected genre will appear here...
+            </div>
+            
+            <button onclick="musicExercise.displaySelectedValue()">Display Selected Value</button>
+            <button onclick="musicExercise.addClassicOption()">Add Classic Option</button>
+            <button onclick="musicExercise.setClassicDefault()">Set Classic as Default</button>
+        </div>
+
+        <!-- Exercise 2: Delete Colors -->
+        <div class="exercise">
+            <h2>Exercise 2: Delete Colors</h2>
+            <div class="exercise-info">
+                <p>• Click button to remove selected color from dropdown</p>
+            </div>
+            
+            <form>
+                <select id="colorSelect">
+                    <option>Red</option>
+                    <option>Green</option>
+                    <option>White</option>
+                    <option>Black</option>
+                </select>
+                <input type="button" value="Select and Remove" class="delete-btn" id="removeColorBtn">
+            </form>
+            
+            <div class="result" id="colorResult">
+                Select a color and click the button to remove it
+            </div>
+        </div>
+
+        <!-- Exercise 3: Shopping List -->
+        <div class="exercise">
+            <h2>Exercise 3: Create a shopping list</h2>
+            <div class="exercise-info">
+                <p>• Add items to shopping list • Clear all items • Dynamic list display</p>
+            </div>
+            
+            <div id="root">
+                <!-- Shopping list will be generated here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script src="Exercises XP Gold.js"></script>
+</body>
+</html>
