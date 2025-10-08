@@ -1,6 +1,6 @@
 # Flask CRUD API Assessment — Student Records
 
-A simple Flask REST API that provides CRUD operations for managing student records, including pagination, JSON handling, and structured error responses.
+
 
 ## Project Structure
 
