@@ -6,6 +6,7 @@ app = Flask(__name__)
 
 # Initial data
 students = [
+    
     {"id": 1, "name": "John Doe", "email": "john.doe@example.com", "age": 20, "gender": "male"},
     {"id": 2, "name": "Jane Doe", "email": "jane.doe@example.com", "age": 21, "gender": "female"},
     {"id": 3, "name": "Jim Doe", "email": "jim.doe@example.com", "age": 22, "gender": "male"},
