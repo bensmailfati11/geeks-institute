@@ -16,7 +16,6 @@ GET http://localhost:5001/students/999
 ### Create a new student
 POST http://localhost:5001/students
 Content-Type: application/json
-
 {
   "name": "Alice Example",
   "email": "alice@example.com",

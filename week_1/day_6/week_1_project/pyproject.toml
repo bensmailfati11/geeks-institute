@@ -1,4 +1,5 @@
 [project]
+
 name = "week_1_project"
 version = "0.1.0"
 description = "Flask CRUD API for student records"

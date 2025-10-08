@@ -4,6 +4,7 @@
 
 ## Project Structure
 
+
 ```
 week_1_project/
 ├── main.py
