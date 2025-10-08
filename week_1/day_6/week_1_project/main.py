@@ -49,6 +49,7 @@ def validate_student_data(data, is_update=False):
     
     return True, ""
 
+
 @app.route('/students', methods=['GET'])
 def get_students():
     """Get all students with pagination"""
