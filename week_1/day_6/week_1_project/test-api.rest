@@ -1,0 +1,62 @@
+### Get all students (default)
+GET http://localhost:5001/students
+
+### Get all students with pagination
+GET http://localhost:5001/students?page=1&limit=2
+
+### Get specific student (exists)
+GET http://localhost:5001/students/1
+
+### Get specific student (exists)
+GET http://localhost:5001/students/2
+
+### Get non-existent student (should return null)
+GET http://localhost:5001/students/999
+
+### Create a new student
+POST http://localhost:5001/students
+Content-Type: application/json
+
+{
+  "name": "Alice Example",
+  "email": "alice@example.com",
+  "age": 25,
+  "gender": "female"
+}
+
+### Create student with missing fields (should error)
+POST http://localhost:5001/students
+Content-Type: application/json
+
+{
+  "name": "Incomplete Student",
+  "age": 20
+}
+
+### Update a student
+PUT http://localhost:5001/students/1
+Content-Type: application/json
+
+{
+  "age": 26,
+  "name": "John Smith Updated"
+}
+
+### Update non-existent student (should 404)
+PUT http://localhost:5001/students/999
+Content-Type: application/json
+
+{
+  "name": "Nonexistent"
+}
+
+### Delete a student
+DELETE http://localhost:5001/students/3
+
+### Delete a non-existent student (should 404)
+DELETE http://localhost:5001/students/999
+
+### Test pagination boundaries
+GET http://localhost:5001/students?page=1&limit=3
+
+GET http://localhost:5001/students?page=2&limit=2
