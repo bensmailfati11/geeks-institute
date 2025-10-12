@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercises XP - HTTP & Forms</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .exercise {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        form {
+            margin: 15px 0;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        button {
+            background: #007cba;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #005a87;
+        }
+        .result {
+            background: #e7f3ff;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            border-left: 4px solid #007cba;
+        }
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+        }
+        .demo-url {
+            background: #fff3cd;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>Exercises XP - HTTP & Forms</h1>
+
+    <!-- Exercise 1: GET Form -->
+    <div class="exercise">
+        <h2>Exercise 1: HTML Form (GET method)</h2>
+        <form id="getForm">
+            <label for="name-get">Name:</label>
+            <input type="text" id="name-get" name="name" required>
+            
+            <label for="message-get">Message:</label>
+            <textarea id="message-get" name="message" required></textarea>
+            
+            <button type="submit">Send (GET)</button>
+            <button type="button" onclick="demoGet()">Show GET Demo</button>
+        </form>
+        <div id="getResult" class="result" style="display: none;">
+            <strong>GET Request Simulation:</strong><br>
+            <div class="demo-url" id="getUrl"></div>
+            The data appears in the URL as query parameters
+        </div>
+    </div>
+
+    <!-- Exercise 2: POST Form -->
+    <div class="exercise">
+        <h2>Exercise 2: HTML Form #2 (POST method)</h2>
+        <form id="postForm">
+            <label for="name-post">Name:</label>
+            <input type="text" id="name-post" name="name" required>
+            
+            <label for="message-post">Message:</label>
+            <textarea id="message-post" name="message" required></textarea>
+            
+            <button type="submit">Send (POST)</button>
+            <button type="button" onclick="demoPost()">Show POST Demo</button>
+        </form>
+        <div id="postResult" class="result" style="display: none;">
+            <strong>POST Request Simulation:</strong><br>
+             (not visible in URL)<br>
+            Check the browser console  
+        </div>
+    </div>
+
+    <!-- Exercise 3: JSON Mario -->
+    <div class="exercise">
+        <h2>Exercise 3: JSON Mario</h2>
+        
+        <h3>Original JavaScript Object:</h3>
+        <pre id="original-obj"></pre>
+        
+        <h3>JSON String (converted):</h3>
+        <pre id="json-string"></pre>
+        
+        <h3>Pretty Printed JSON:</h3>
+        <pre id="pretty-json"></pre>
+        
+        <button onclick="convertToJSON()">Convert to JSON</button>
+        <button onclick="debugJSON()">Debug in Console</button>
+        
+        <div class="result">
+            <strong>Answer:</strong> Nested objects remain nested in the JSON structure. JSON preserves the object hierarchy.
+        </div>
+    </div>
+
+    <script>
+        // Prevent form submissions
+        document.getElementById('getForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            simulateGet();
+        });
+
+        document.getElementById('postForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            simulatePost();
+        });
+
+        function simulateGet() {
+            const name = document.getElementById('name-get').value;
+            const message = document.getElementById('message-get').value;
+            
+            if (name && message) {
+                const url = `?name=${encodeURIComponent(name)}&message=${encodeURIComponent(message)}`;
+                document.getElementById('getUrl').textContent = window.location.href + url;
+                document.getElementById('getResult').style.display = 'block';
+                
+                console.log("=== GET FORM DATA ===");
+                console.log("URL would be:", url);
+                console.log("Data appears in URL as query parameters");
+            }
+        }
+
+        function simulatePost() {
+            const name = document.getElementById('name-post').value;
+            const message = document.getElementById('message-post').value;
+            
+            if (name && message) {
+                document.getElementById('postResult').style.display = 'block';
+                
+                console.log("=== POST FORM DATA ===");
+                console.log("Data sent in request body:");
+                console.log("Name:", name);
+                console.log("Message:", message);
+                console.log("This data would NOT appear in the URL");
+                console.log("Check Network tab in Developer Tools to see POST data");
+            }
+        }
+
+        function demoGet() {
+            document.getElementById('name-get').value = "John Doe";
+            document.getElementById('message-get').value = "This is a test message for GET method";
+            simulateGet();
+        }
+
+        function demoPost() {
+            document.getElementById('name-post').value = "Jane Smith";
+            document.getElementById('message-post').value = "This is a test message for POST method";
+            simulatePost();
+        }
+
+        // Exercise 3: JSON Mario
+        const marioGame = {
+            detail: "An amazing game!",
+            characters: {
+                mario: {
+                    description: "Small and jumpy. Likes princesses.",
+                    height: 10,
+                    weight: 3,
+                    speed: 12,
+                },
+                bowser: {
+                    description: "Big and green, Hates princesses.",
+                    height: 16,
+                    weight: 6,
+                    speed: 4,
+                },
+                princessPeach: {
+                    description: "Beautiful princess.",
+                    height: 12,
+                    weight: 2,
+                    speed: 2,
+                }
+            },
+        };
+
+        // Display original object
+        document.getElementById('original-obj').textContent = JSON.stringify(marioGame, null, 2);
+
+        function convertToJSON() {
+            // Convert to JSON string
+            const jsonString = JSON.stringify(marioGame);
+            document.getElementById('json-string').textContent = jsonString;
+            
+            // Pretty print JSON
+            const prettyJson = JSON.stringify(marioGame, null, 2);
+            document.getElementById('pretty-json').textContent = prettyJson;
+            
+            console.log("=== JSON CONVERSION ===");
+            console.log("Original object:", marioGame);
+            console.log("JSON string:", jsonString);
+            console.log("Pretty JSON:", prettyJson);
+        }
+
+        function debugJSON() {
+            console.log("=== DEBUGGING JSON ===");
+            console.log("Set a breakpoint in the browser debugger to inspect values");
+            console.log("1. Press F12 → Sources tab");
+            console.log("2. Click on line number to set breakpoint");
+            console.log("3. Refresh page or click button again");
+            
+            debugger;
+            
+            const jsonObj = JSON.stringify(marioGame);
+            console.log("JSON at breakpoint:", jsonObj);
+        }
+
+        // Auto-convert on page load
+        convertToJSON();
+    </script>
+</body>
+</html>

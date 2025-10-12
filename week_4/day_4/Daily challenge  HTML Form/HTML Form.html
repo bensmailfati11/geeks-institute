@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Challenge: HTML Form</title>
+</head>
+<body>
+    <h1>User Information Form</h1>
+    
+    <form id="userForm">
+        <div>
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" name="firstName" required>
+        </div>
+        
+        <div>
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" name="lastName" required>
+        </div>
+        
+        <button type="submit">Send Data</button>
+    </form>
+    
+    <h2>JSON Output</h2>
+    <pre id="jsonOutput">
+        {/* Your JSON data will appear here after submitting the form */}
+    </pre>
+
+    <script>
+        const userForm = document.getElementById('userForm');
+        const jsonOutput = document.getElementById('jsonOutput');
+        
+        userForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            
+            const userData = {
+                firstName: firstName,
+                lastName: lastName
+            };
+            
+            const jsonString = JSON.stringify(userData, null, 2);
+            jsonOutput.textContent = jsonString;
+        });
+    </script>
+</body>
+</html>
