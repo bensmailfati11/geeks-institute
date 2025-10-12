@@ -1,0 +1,19 @@
+# Authentication Database Exercise
+# All dependencies are part of Python standard library
+
+# Python 3.6+ required for:
+# - f-strings
+# - secrets module
+# - sqlite3 (built-in)
+# - hashlib (built-in)
+
+# No external packages required!
+# This project uses only Python standard library modules:
+# - sqlite3 (database)
+# - hashlib (password hashing)  
+# - secrets (salt generation)
+# - os (file operations)
+
+# Optional: For enhanced password hashing (not used in this exercise)
+# bcrypt==4.0.1
+# argon2-cffi==21.3.0
