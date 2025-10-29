@@ -28,8 +28,8 @@ Follow these steps **top-to-bottom**:
 ### 2️⃣ Clone & Install
 
 ```bash
-git clone <your-repo-url>
-cd <repo-folder>
+git clone <github.com/bensmailfati11/geeks-institute/tree/master/week_6/day_5/>
+cd <Event Organizer API>
 npm install
 ```
 
