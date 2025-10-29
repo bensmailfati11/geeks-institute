@@ -286,6 +286,6 @@ Open an issue or pull request — contributions are always welcome!
 
 ---
 
-This version includes **Environment setup, MongoDB, dependencies, server run, API usage, testing, troubleshooting, security** — all in one single continuous script.
+This version includes **Environment setup, MongoDB, dependencies, server run, API usage, testing, troubleshooting, security** 
 
 ````
