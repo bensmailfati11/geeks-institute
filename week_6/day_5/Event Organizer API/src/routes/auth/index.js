@@ -29,7 +29,10 @@ router.get("/me", auth, async (req, res) => {
     const user = await authService.getProfile(req.user.userId);
     res.json(user);
   } catch (error) {
-    res.status(404).json({ message: error.message });
+    if (error.message === "User not found") {
+      return res.status(404).json({ message: error.message });
+    }
+    res.status(500).json({ message: "Failed to retrieve profile" });
   }
 });
 
