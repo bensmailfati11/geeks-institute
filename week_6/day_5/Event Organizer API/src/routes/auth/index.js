@@ -1,5 +1,6 @@
 import express from "express";
 import { authService } from "#@/modules/auth/index.js";
+import { auth } from "#@/middlewares/auth.js";
 
 const router = express.Router({ mergeParams: true });
 
@@ -20,6 +21,15 @@ router.post("/login", async (req, res) => {
     res.json(result);
   } catch (error) {
     res.status(401).json({ message: error.message });
+  }
+});
+
+router.get("/me", auth, async (req, res) => {
+  try {
+    const user = await authService.getProfile(req.user.userId);
+    res.json(user);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
   }
 });
 
