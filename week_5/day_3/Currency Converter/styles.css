@@ -1,0 +1,94 @@
+body {
+    font-family: Arial, sans-serif;
+    background-image: url('https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSezG-Y0GGhdoCpAww3eEFR2AeGt-E-rLeYmEeal-xWNA7-OxJC');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background-color: rgba(255, 255, 255, 0.288);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.converter {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    text-align: center;
+}
+
+select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: white;
+}
+
+button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#convert-btn {
+    background-color: #4CAF50;
+    color: white;
+    width: 100%;
+}
+
+#convert-btn:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+}
+
+#switch-btn {
+    background-color: #2196F3;
+    color: white;
+    width: 100%;
+}
+
+#switch-btn:hover {
+    background-color: #0b7dda;
+    transform: translateY(-2px);
+}
+
+#result {
+    font-weight: bold;
+    font-size: 20px;
+    margin-top: 20px;
+    color: #333;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}

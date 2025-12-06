@@ -1,0 +1,104 @@
+body {
+    font-family: 'Roboto Mono', monospace; /* Utilisation de la police importée */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f0f0;
+    margin: 0;
+    overflow: hidden; /* Cache le débordement potentiel */
+}
+
+.pokedex {
+    width: 600px; /* Largeur de l'image de fond */
+    height: 387px; /* Hauteur de l'image de fond */
+    background-image: url('https://github.com/devtlv/studentsGitHub/blob/master/JS/Week%205/Day%205/Mini%20Projects/Mini-Project%202%20-%20Pokedex%20API/pokedex.png?raw=true');
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: relative; /* Positionnement relatif pour les éléments internes absolus */
+}
+
+/* Écran supérieur (Image du Pokémon) */
+.screen-content {
+    position: absolute;
+    top: 55px; /* Ajusté manuellement pour correspondre à l'image */
+    left: 235px; /* Ajusté manuellement */
+    width: 130px; 
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: #f7f7f7; /* Couleur de fond de l'écran virtuel */
+    overflow: hidden;
+}
+
+#pokemon-image {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+/* Écran inférieur (Infos) */
+.pokemon-info {
+    position: absolute;
+    top: 240px; /* Ajusté manuellement */
+    left: 230px; /* Ajusté manuellement */
+    width: 150px;
+    height: 90px;
+    background-color: #f7f7f7; /* Couleur de fond de l'écran virtuel */
+    padding: 10px;
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+/* Styles de base des boutons pour les rendre invisibles et juste cliquables */
+.control-btn {
+    position: absolute;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 10; /* Pour s'assurer qu'ils sont cliquables */
+}
+
+/* Bouton vert aléatoire */
+.green-btn {
+    top: 300px; /* Positionné sur le bouton vert de l'image */
+    left: 450px;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%; /* Pour qu'il corresponde au cercle */
+}
+
+/* Zone des boutons directionnels (regroupement pour un positionnement facile) */
+.prev-button-area {
+    position: absolute;
+    top: 270px;
+    left: 60px;
+    width: 80px;
+    height: 80px;
+    /* La croix (+) est déjà dans l'image de fond, ces boutons sont invisibles dessus */
+}
+
+.prev-btn {
+    /* Positionnement relatif à prev-button-area */
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    top: 20px;
+    left: 0;
+}
+
+.next-btn {
+    /* Positionnement relatif à prev-button-area */
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    top: 20px;
+    right: 0;
+}
+
+/* Effets au survol */
+.control-btn:hover {
+    opacity: 0.5; /* Légère opacité pour montrer qu'ils sont interactifs */
+}

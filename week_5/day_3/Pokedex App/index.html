@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokedex App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <img src="https://github.com/devtlv/studentsGitHub/blob/master/JS/Week%205/Day%205/Mini%20Projects/Mini-Project%202%20-%20Pokedex%20API/logo.png?raw=true" alt="Pokemon Logo" class="logo">
+        <div class="pokedex">
+            <div class="screen">
+                <div id="loading" class="loading hidden">
+                    <div class="spinner"></div>
+                    Loading...
+                </div>
+                <div id="error" class="error hidden">
+                    Oh no! That Pokemon isn’t available…
+                </div>
+                <div id="pokemon-info" class="pokemon-info hidden">
+                    <img id="pokemon-image" src="" alt="Pokemon Image">
+                    <h2 id="pokemon-name"></h2>
+                    <p><strong>ID:</strong> <span id="pokemon-id"></span></p>
+                    <p><strong>Height:</strong> <span id="pokemon-height"></span></p>
+                    <p><strong>Weight:</strong> <span id="pokemon-weight"></span></p>
+                    <p><strong>Type:</strong> <span id="pokemon-type"></span></p>
+                </div>
+            </div>
+            <div class="controls">
+                <button id="prev-btn">Previous</button>
+                <button id="random-btn">Random</button>
+                <button id="next-btn">Next</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
