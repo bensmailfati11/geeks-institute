@@ -1,0 +1,22 @@
+{
+  "name": "mini-project-notes-app",
+  "version": "1.0.0",
+  "description": "A command-line notes application built with Node.js",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "notes",
+    "cli",
+    "nodejs",
+    "yargs",
+    "terminal"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "yargs": "^17.7.2"
+  }
+}

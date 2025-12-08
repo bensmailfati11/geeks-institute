@@ -1,0 +1,19 @@
+{
+  "name": "more-nodejs-challenges",
+  "version": "1.0.0",
+  "description": "Node.js Date Challenges - More exercises on working with dates in Node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "ex1": "node Ex_1/script.js",
+    "ex2": "node Ex_2/script.js",
+    "ex3": "node Ex_3/script.js"
+  },
+  "keywords": ["nodejs", "date", "exercises"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "prompt-sync": "^4.2.0",
+    "date-holidays": "^3.23.12"
+  }
+}

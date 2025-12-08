@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Chat App</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Join Screen -->
+    <div id="join-screen" class="screen active">
+        <div class="join-container">
+            <div class="chat-header">
+                <h1>💬 Real-Time Chat</h1>
+                <p>Connect with people instantly</p>
+            </div>
+            <form id="join-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        placeholder="Enter your username" 
+                        required 
+                        minlength="2"
+                        maxlength="20"
+                        autocomplete="off"
+                    >
+                </div>
+                <div class="form-group">
+                    <label for="room">Chat Room</label>
+                    <select id="room" required>
+                        <option value="General">General</option>
+                        <option value="Technology">Technology</option>
+                        <option value="Gaming">Gaming</option>
+                        <option value="Music">Music</option>
+                        <option value="Sports">Sports</option>
+                        <option value="Random">Random</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Join Chat</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Chat Screen -->
+    <div id="chat-screen" class="screen">
+        <div class="chat-container">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <h3 id="room-name">Room Name</h3>
+                    <button id="leave-btn" class="btn btn-small">Leave</button>
+                </div>
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <span id="user-initial">U</span>
+                    </div>
+                    <div class="user-details">
+                        <strong id="current-username">Username</strong>
+                        <span class="status online">Online</span>
+                    </div>
+                </div>
+                <div class="users-list">
+                    <h4>Active Users <span id="user-count" class="badge">0</span></h4>
+                    <ul id="users"></ul>
+                </div>
+            </aside>
+
+            <!-- Chat Area -->
+            <main class="chat-main">
+                <div class="chat-messages" id="messages"></div>
+                <div class="typing-indicator" id="typing-indicator"></div>
+                <div class="chat-form-container">
+                    <form id="chat-form">
+                        <input 
+                            type="text" 
+                            id="message-input" 
+                            placeholder="Type a message..." 
+                            autocomplete="off"
+                            required
+                        >
+                        <button type="submit" class="btn btn-send">
+                            <span>Send</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                            </svg>
+                        </button>
+                    </form>
+                    <div class="emoji-picker" id="emoji-picker" style="display: none;">
+                        <button class="emoji" data-emoji="😀">😀</button>
+                        <button class="emoji" data-emoji="😂">😂</button>
+                        <button class="emoji" data-emoji="❤️">❤️</button>
+                        <button class="emoji" data-emoji="👍">👍</button>
+                        <button class="emoji" data-emoji="🎉">🎉</button>
+                        <button class="emoji" data-emoji="🔥">🔥</button>
+                        <button class="emoji" data-emoji="😎">😎</button>
+                        <button class="emoji" data-emoji="🤔">🤔</button>
+                        <button class="emoji" data-emoji="👋">👋</button>
+                        <button class="emoji" data-emoji="💯">💯</button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Notification Sound -->
+    <audio id="notification-sound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGH0fPTgjMGHm7A7+OZURE..." />
+    </audio>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
