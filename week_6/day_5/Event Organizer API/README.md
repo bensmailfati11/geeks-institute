@@ -113,6 +113,13 @@ Content-Type: application/json
 }
 ```
 
+**Get My Account**
+
+```http
+GET /auth/me
+Authorization: Bearer YOUR_TOKEN
+```
+
 ---
 
 ### Events

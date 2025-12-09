@@ -1,5 +1,6 @@
 import express from "express";
 import { authService } from "#@/modules/auth/index.js";
+import { auth } from "#@/middlewares/auth.js";
 
 const router = express.Router({ mergeParams: true });
 
@@ -20,6 +21,18 @@ router.post("/login", async (req, res) => {
     res.json(result);
   } catch (error) {
     res.status(401).json({ message: error.message });
+  }
+});
+
+router.get("/me", auth, async (req, res) => {
+  try {
+    const user = await authService.getProfile(req.user.userId);
+    res.json(user);
+  } catch (error) {
+    if (error.message === "User not found") {
+      return res.status(404).json({ message: error.message });
+    }
+    res.status(500).json({ message: "Failed to retrieve profile" });
   }
 });
 
